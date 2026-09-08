@@ -1,0 +1,414 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Alexandre Ambiehl",
+    "label": "AI Software Architect",
+    "summary": "Architecte logiciel hands-on avec plus de 14 ans d’expérience en développement, spécialisé en backend PHP/Symfony et en conception d’applications et d’agents IA. Je conçois des architectures et des API, veille à la qualité du code et accompagne les équipes sur les choix et les difficultés techniques. J’expérimente et développe des usages de l’IA pour améliorer le travail quotidien des développeurs.",
+    "email": "nestate.dev@proton.me",
+    "phone": "+33 6 50 64 92 32",
+    "location": {
+      "city": "Montpellier",
+      "countryCode": "FR"
+    }
+  },
+  "work": [
+    {
+      "name": "CGI",
+      "position": "Expert technique — Architecture applicative et développement",
+      "startDate": "2024-05",
+      "summary": "Trois missions successives depuis mai 2024, auprès d’une grande administration française et de grands groupes.",
+      "highlights": [
+        "Développement et maintenance d’applications web avec PHP/Symfony et Java/Spring.",
+        "Accompagnement technique des collègues et conseil sur les outils IA : choix, essais, réponses aux questions et partage des retours d’expérience.",
+        "Animation d’émissions en direct sur le code et la veille technologique, diffusées sur Teams et YouTube.",
+        "Participation à un hackathon interne et à des projets annexes menés en équipe."
+      ],
+      "missions": [
+        {
+          "name": "Grand groupe de services à l’environnement",
+          "label": "Mission actuelle · Tech lead · IA, web & mobile",
+          "summary": "Maintenance et évolution d’un parc de 16 applications web et mobiles, avec des développements menés en autonomie et un accompagnement technique de l’équipe.",
+          "highlights": [
+            "Conception et développement d’un ensemble d’agents IA pour les différentes étapes du développement : cadrage produit (PO), UX/UI, architecture, code, revue de code et cybersécurité.",
+            "Workflow multiagents utilisé en bêta par les équipes du projet, avec accompagnement des utilisateurs et recueil de leurs retours.",
+            "Analyse des besoins et des limites du logiciel, proposition d’une refonte adaptée et présentation argumentée de la solution pour faire avancer le projet.",
+            "Conception et réalisation de cette refonte, avec réécriture de la quasi-totalité du code à partir de l’application existante.",
+            "Après la refonte : anomalies identifiées corrigées, performances améliorées et maintenance simplifiée.",
+            "Maintenance d’applications web en Java/Spring, React et Tailwind CSS, et d’applications mobiles en Flutter.",
+            "Maintenance d’une application historique Microsoft Access."
+          ],
+          "keywords": [
+            "Agents IA",
+            "Java",
+            "Spring",
+            "React",
+            "Tailwind CSS",
+            "Flutter",
+            "Microsoft Access"
+          ]
+        },
+        {
+          "name": "Grand groupe de télécommunications",
+          "label": "Mission e-commerce",
+          "summary": "Développement d’un site e-commerce destiné aux entreprises.",
+          "highlights": [
+            "Développement de fonctionnalités e-commerce avec Drupal et JavaScript.",
+            "Adaptation des bases de données à la montée en charge du site.",
+            "Travail sur une plateforme utilisant OpenShift et Docker."
+          ],
+          "keywords": [
+            "Drupal",
+            "JavaScript",
+            "Mise à l’échelle des bases de données",
+            "OpenShift",
+            "Docker"
+          ]
+        },
+        {
+          "name": "Grande administration française",
+          "label": "Mission web institutionnelle",
+          "summary": "Maintenance d’un site web institutionnel basé sur Symfony et le CMS Sulu.",
+          "highlights": [
+            "Maintenance des templates Twig et des styles CSS."
+          ],
+          "keywords": [
+            "PHP",
+            "Symfony",
+            "Sulu",
+            "Twig",
+            "CSS"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Servialux",
+      "position": "Responsable R&D",
+      "startDate": "2017-09",
+      "endDate": "2023-11",
+      "summary": "Conception d’applications web et de produits connectés à Dudelange, au Luxembourg : logiciel, cartes électroniques et firmware.",
+      "highlights": [
+        "Analyse des besoins clients, rédaction des cahiers des charges, coordination du développement et accompagnement des tests utilisateurs.",
+        "Développement d’applications web et d’API avec PHP/Symfony, SvelteKit, TypeScript et Tailwind CSS.",
+        "Conception de PCB avec KiCad et développement de firmwares C++ pour ESP32 avec PlatformIO.",
+        "Mise en place des échanges entre équipements et services avec RabbitMQ et gestion des données avec PostgreSQL, MySQL et MongoDB.",
+        "Automatisation des déploiements avec Docker, Drone et GitLab ; tests avec PHPUnit et support technique."
+      ],
+      "keywords": [
+        "PHP",
+        "Symfony",
+        "C++",
+        "SvelteKit",
+        "PlatformIO",
+        "KiCad",
+        "Tailwind CSS"
+      ],
+      "secondaryKeywords": [
+        "C#",
+        "TypeScript",
+        "Vue.js",
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Doctrine",
+        "Prisma",
+        "Docker",
+        "RabbitMQ",
+        "MQTT",
+        "GitLab",
+        "Drone",
+        "CI/CD",
+        "PHPUnit",
+        "AWS",
+        "Azure",
+        "ESP32",
+        "Conception de PCB"
+      ]
+    },
+    {
+      "name": "Distriservice",
+      "position": "Développeur web full stack",
+      "startDate": "2012-01",
+      "endDate": "2017-08",
+      "summary": "Développement d’applications web et de solutions connectées pour un distributeur de matériel informatique et électrique.",
+      "highlights": [
+        "Développement de sites et d’applications avec PHP, Laravel et Symfony, et des interfaces avec HTML, CSS, JavaScript et Twig.",
+        "Intégration de bases de données et développement de solutions IoT sur Raspberry Pi en C++ et Python.",
+        "Planification du travail et revues de code au sein d’une équipe agile.",
+        "Tests, correction d’anomalies et amélioration des performances et de la stabilité."
+      ],
+      "keywords": [
+        "PHP",
+        "Laravel",
+        "Symfony",
+        "Bootstrap",
+        "Twig",
+        "Python",
+        "C++",
+        "PostgreSQL",
+        "MySQL",
+        "SQLite"
+      ]
+    },
+    {
+      "name": "Woippy Protection",
+      "position": "Administrateur réseau",
+      "startDate": "2008-08",
+      "endDate": "2011-12",
+      "summary": "Administration de systèmes et de réseaux à Metz, en France.",
+      "highlights": [
+        "Déploiement et gestion de serveurs sous Linux et Windows Server.",
+        "Support technique et assistance aux utilisateurs par hotline."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Anne de Méjanès",
+      "area": "Vente",
+      "studyType": "BEP",
+      "startDate": "2006",
+      "endDate": "2008"
+    }
+  ],
+  "skills": [
+    {
+      "name": "IA générative & agents",
+      "summary": "Conception et développement complets d’un workflow multiagents, utilisé en bêta par les équipes du projet. Réalisation d’un prototype RAG avec Symfony AI. Utilisation de serveurs MCP existants et développement de serveurs sur mesure pour un système RAG et une application interne de suivi du développement : des usages de l’IA pour le code et la gestion de projet.",
+      "keywords": [
+        "Workflow multiagents",
+        "Symfony AI",
+        "Adoption de l’IA",
+        "MCP"
+      ],
+      "secondaryKeywords": [
+        "RAG",
+        "Codex",
+        "Claude",
+        "OpenCode",
+        "GitHub Copilot",
+        "MCP Railway",
+        "MCP GitHub",
+        "MCP Serena",
+        "MCP Context7",
+        "MCP Docker"
+      ]
+    },
+    {
+      "name": "Backend PHP/Symfony & architecture",
+      "summary": "Expertise en PHP/Symfony : architecture logicielle, conception d’API et tests. Pratique de Java/Spring en projet, revues de code ponctuelles et gestion des pull requests et merge requests (PR/MR).",
+      "keywords": [
+        "PHP",
+        "Java",
+        "Symfony 8",
+        "Spring",
+        "Architecture logicielle",
+        "API"
+      ],
+      "secondaryKeywords": [
+        "Symfony 4 à 7",
+        "Bases de données",
+        "Tests",
+        "Revues de code ponctuelles",
+        "Doctrine",
+        "DDD",
+        "ADR",
+        "Drupal",
+        "Sulu",
+        "Laravel",
+        "Gestion des PR/MR"
+      ]
+    },
+    {
+      "name": "Full stack, interfaces & données",
+      "keywords": [
+        "Svelte / SvelteKit",
+        "Tailwind CSS",
+        "PostgreSQL",
+        "MySQL"
+      ],
+      "secondaryKeywords": [
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "HTML / CSS",
+        "Twig",
+        "Flutter",
+        "MongoDB",
+        "Prisma",
+        "C#",
+        "Vue.js",
+        "Microsoft Access"
+      ]
+    },
+    {
+      "name": "Systèmes & qualité",
+      "keywords": [
+        "Docker",
+        "CI/CD",
+        "Linux",
+        "macOS",
+        "Nginx",
+        "Caddy"
+      ],
+      "secondaryKeywords": [
+        "PHPUnit",
+        "Playwright",
+        "GitLab",
+        "GitHub",
+        "Jenkins",
+        "Windows Server",
+        "Drone",
+        "AWS",
+        "Azure",
+        "OpenShift",
+        "Bitbucket"
+      ],
+      "summary": "Tests unitaires avec PHPUnit et tests fonctionnels avec Playwright pour vérifier le comportement des applications."
+    },
+    {
+      "name": "IoT & embarqué",
+      "keywords": [
+        "C++",
+        "Python",
+        "ESP32",
+        "Raspberry Pi",
+        "PlatformIO",
+        "KiCad",
+        "Conception de PCB",
+        "MQTT",
+        "RabbitMQ"
+      ]
+    },
+    {
+      "name": "Pilotage technique & R&D",
+      "keywords": [
+        "Cadrage des besoins",
+        "Retours d’expérience",
+        "Accompagnement technique"
+      ],
+      "summary": "Expérience de responsable R&D : analyse des besoins, coordination du développement et accompagnement des équipes. Partage des retours d’expérience, pair programming et aide régulière aux stagiaires et aux apprenants.",
+      "secondaryKeywords": [
+        "Tech lead",
+        "Pair programming",
+        "Accompagnement des stagiaires et apprenants",
+        "Choix d’outils IA",
+        "Cahiers des charges",
+        "Coordination technique",
+        "Agile",
+        "Scrum",
+        "Kanban",
+        "Jira",
+        "Figma",
+        "OpenProject"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "IA générative & agents",
+      "type": "Réalisation professionnelle · CGI · Client anonymisé",
+      "description": "Création d’un agent de développement et introduction des usages de l’IA dans une grande entreprise, avec un rôle de référent et une large autonomie d’initiative.",
+      "keywords": [
+        "Agent de développement",
+        "Adoption de l’IA",
+        "Référent IA"
+      ],
+      "highlights": [
+        "Création d’un agent IA dédié au développement dans le cadre de la mission actuelle.",
+        "Contribution à l’introduction de l’IA dans l’entreprise cliente, avec un rôle de référent sur ses usages.",
+        "Détails de conception et de fonctionnement non publiés pour respecter la confidentialité."
+      ]
+    },
+    {
+      "name": "Applications web & API",
+      "type": "Réalisations professionnelles · Servialux",
+      "description": "Des applications web associant développement backend, interfaces et gestion des données.",
+      "keywords": [
+        "Symfony",
+        "TypeScript",
+        "Svelte",
+        "PostgreSQL"
+      ],
+      "highlights": [
+        "Développement d’applications et d’API avec Symfony, Svelte et Vue.js.",
+        "Utilisation de Doctrine et Prisma, avec PostgreSQL, MySQL et MongoDB.",
+        "Pipelines CI/CD avec Docker, Drone et GitLab ; tests avec PHPUnit."
+      ]
+    },
+    {
+      "name": "Objets connectés",
+      "type": "Réalisations professionnelles · Servialux",
+      "description": "La continuité entre électronique, firmware et applications pour des dispositifs connectés.",
+      "keywords": [
+        "ESP32",
+        "C++",
+        "PlatformIO",
+        "RabbitMQ"
+      ],
+      "highlights": [
+        "Conception de cartes électroniques à base de SoC ESP32.",
+        "Développement de firmwares personnalisés en C++.",
+        "Intégration des communications entre microcontrôleurs et services avec RabbitMQ."
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Français",
+      "fluency": "Langue maternelle"
+    },
+    {
+      "language": "Anglais",
+      "fluency": "Intermédiaire"
+    }
+  ],
+  "meta": {
+    "version": "v1.10.0",
+    "demo": false,
+    "experienceSince": 2008,
+    "images": {
+      "projects": {
+        "Applications web & API": {
+          "src": "/images/relay-servers.jpg",
+          "alt": "Photographie d’illustration de baies de serveurs dans un centre de données.",
+          "photographer": "imgix",
+          "source": "https://unsplash.com/photos/server-racks-in-data-center-klWUhr-wPJ8",
+          "original": "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41",
+          "license": "https://unsplash.com/license",
+          "illustration": true
+        },
+        "IA générative & agents": {
+          "src": "/images/forma-workspace.jpg",
+          "alt": "Photographie d’illustration d’un bureau contemporain avec ordinateur.",
+          "photographer": "Deliberate Directions",
+          "source": "https://unsplash.com/photos/modern-office-space-with-a-desk-computer-and-decor-ieDXimQcLeM",
+          "original": "https://images.unsplash.com/photo-1746021535489-00edc5efb203",
+          "license": "https://unsplash.com/license",
+          "illustration": true
+        },
+        "Objets connectés": {
+          "src": "/images/signal-circuit.jpg",
+          "alt": "Photographie d’illustration des composants d’un circuit électronique.",
+          "photographer": "Alexandre Debiève",
+          "source": "https://unsplash.com/photos/macro-photography-of-black-circuit-board-FO7JIlwjOtU",
+          "original": "https://images.unsplash.com/photo-1518770660439-4636190af475",
+          "license": "https://unsplash.com/license",
+          "illustration": true
+        }
+      }
+    },
+    "educationSummary": "Parcours informatique autodidacte depuis 2008"
+  },
+  "interests": [
+    {
+      "name": "Gastronomie",
+      "keywords": [
+        "Découverte de bonnes tables"
+      ]
+    },
+    {
+      "name": "Musculation & fitness"
+    }
+  ]
+}
