@@ -22,6 +22,7 @@
     "test:integration": "node --experimental-strip-types --test tests/integration/*.test.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0",
     "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "2.70.3",
@@ -34,6 +35,7 @@
     "vite": "8.2.2"
   },
   "dependencies": {
+    "@lucide/svelte": "1.46.0",
     "markdown-it": "15.0.2",
     "sharp": "0.35.4"
   }

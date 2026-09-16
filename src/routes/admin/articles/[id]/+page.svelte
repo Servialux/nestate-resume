@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from '$lib/components/Icon.svelte';
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
   import { beforeNavigate } from '$app/navigation';
@@ -49,10 +50,10 @@
   });
 </script>
 
-<svelte:head><title>{data.post ? `Modifier : ${data.post.title}` : 'Nouvel article'} — Espace auteur</title><meta name="robots" content="noindex, nofollow" /></svelte:head>
+<svelte:head><title>{data.post ? `Modifier : ${data.post.title}` : 'Nouvel article'} — Espace auteur</title></svelte:head>
 
 <BlogShell admin userEmail={data.user?.email}>
-  <a class="blog-back" href={`${base}/admin`}><span aria-hidden="true">←</span> Mes articles</a>
+  <a class="blog-back" href={`${base}/admin`}><span aria-hidden="true"><Icon name="arrow-left" /></span> Mes articles</a>
   <div class="blog-editor-heading"><h1>{data.post ? 'Faire évoluer vos idées.' : 'Une nouvelle page.'}</h1><span class="blog-badge" class:blog-badge-published={isPublished}><span class="blog-dot" aria-hidden="true"></span>{isPublished ? 'Publié' : 'Brouillon'}</span></div>
   {#if notice}<div class="blog-notice" class:blog-notice-error={form?.success === false} class:blog-notice-success={form?.success !== false} role={form?.success === false ? 'alert' : 'status'}>{notice}</div>{/if}
   <form method="POST" action="?/save" class="blog-editor-grid" aria-busy={pending || uploading} use:enhance={({ cancel }) => { if (uploading) { cancel(); return; } pending = true; return async ({ update }) => { try { await update({ reset: false }); } finally { pending = false; } }; }}>
@@ -75,8 +76,8 @@
     <aside class="blog-panel blog-editor-aside" aria-label="Publication de l’article">
       <div><h2>Publication</h2><p class="blog-field-help" aria-live="polite">{dirty ? 'Modifications non enregistrées.' : data.post ? 'Votre article est enregistré.' : 'Votre article n’est pas encore enregistré.'}</p></div>
       <div class="blog-editor-actions">
-        <button class="blog-button blog-button-primary" type="submit" name="intent" value="publish" disabled={pending || uploading}>{pending ? 'Enregistrement…' : isPublished ? 'Enregistrer les modifications' : 'Publier l’article'} <span aria-hidden="true">↗</span></button>
-        {#if isPublished}<button class="blog-button blog-button-subtle" type="submit" name="intent" value="unpublish" disabled={pending || uploading}>Remettre en brouillon</button><a class="blog-button blog-button-subtle" href={`${base}/blog/${data.post?.slug}`} target="_blank" rel="noreferrer">Voir l’article <span aria-hidden="true">↗</span></a>
+        <button class="blog-button blog-button-primary" type="submit" name="intent" value="publish" disabled={pending || uploading}>{pending ? 'Enregistrement…' : isPublished ? 'Enregistrer les modifications' : 'Publier l’article'} <span aria-hidden="true"><Icon name="arrow-up-right" /></span></button>
+        {#if isPublished}<button class="blog-button blog-button-subtle" type="submit" name="intent" value="unpublish" disabled={pending || uploading}>Remettre en brouillon</button><a class="blog-button blog-button-subtle" href={`${base}/blog/${data.post?.slug}`} target="_blank" rel="noreferrer">Voir l’article <span aria-hidden="true"><Icon name="external-link" /></span><span class="sr-only"> (nouvel onglet)</span></a>
         {:else}<button class="blog-button blog-button-subtle" type="submit" name="intent" value="draft" disabled={pending || uploading}>Enregistrer le brouillon</button>{/if}
       </div>
       <hr />
@@ -90,11 +91,11 @@
     <div class="blog-panel" style="margin-top:28px">
       <div class="blog-connection-state"><h2>Partage LinkedIn</h2><span class="blog-badge" class:blog-badge-published={data.post.linkedinStatus === 'sent'}>{linkedinLabels[data.post.linkedinStatus]}</span></div>
       {#if data.post.linkedinError}<div class="blog-notice blog-notice-error" role="status">{data.post.linkedinError}</div>{/if}
-      {#if data.post.linkedinUrl}<a class="blog-button blog-button-small" href={data.post.linkedinUrl} target="_blank" rel="noreferrer">Voir le post LinkedIn <span aria-hidden="true">↗</span></a>{/if}
+      {#if data.post.linkedinUrl}<a class="blog-button blog-button-small" href={data.post.linkedinUrl} target="_blank" rel="noreferrer">Voir le post LinkedIn <span aria-hidden="true"><Icon name="external-link" /></span><span class="sr-only"> (nouvel onglet)</span></a>{/if}
       {#if data.post.linkedinStatus === 'never' || data.post.linkedinStatus === 'failed' || data.post.linkedinStatus === 'uncertain'}
         <form method="POST" action="?/retryLinkedIn" class="blog-form" use:enhance={({ cancel }) => { if (uploading) { cancel(); return; } pending = true; return async ({ update }) => { try { await update({ reset: false }); } finally { pending = false; confirming = false; } }; }}>
           {#if data.post.linkedinStatus === 'uncertain'}<label class="blog-check"><input type="checkbox" name="confirmUncertain" required bind:checked={confirming} /><span>J’ai vérifié mon profil LinkedIn : ce post n’a pas été publié.<small>Une réponse incertaine peut cacher un envoi réussi. Cette vérification évite un doublon.</small></span></label>{/if}
-          <div><button class="blog-button blog-button-small" type="submit" disabled={pending || uploading || !data.linkedinConfigured || dirty || (data.post.linkedinStatus === 'uncertain' && !confirming)}>{pending ? 'Partage en cours…' : data.post.linkedinStatus === 'never' ? 'Partager sur LinkedIn' : 'Réessayer le partage'} <span aria-hidden="true">↗</span></button></div>
+          <div><button class="blog-button blog-button-small" type="submit" disabled={pending || uploading || !data.linkedinConfigured || dirty || (data.post.linkedinStatus === 'uncertain' && !confirming)}>{pending ? 'Partage en cours…' : data.post.linkedinStatus === 'never' ? 'Partager sur LinkedIn' : 'Réessayer le partage'} <span aria-hidden="true"><Icon name="arrow-up-right" /></span></button></div>
           {#if dirty}<p class="blog-field-help">Enregistrez vos modifications avant de partager l’article.</p>{/if}
           {#if !data.linkedinConfigured}<p class="blog-field-help"><a href={`${base}/admin/linkedin`}>Configurez la connexion LinkedIn</a> avant de partager.</p>{/if}
         </form>

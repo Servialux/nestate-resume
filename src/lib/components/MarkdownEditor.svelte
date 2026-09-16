@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from '$lib/components/Icon.svelte';
   import { tick } from 'svelte';
   import { base } from '$app/paths';
   import { IMAGE_TYPES, MAX_IMAGE_BYTES } from '$lib/images';
@@ -48,7 +49,7 @@
     failed = false;
     message = '';
     if (!IMAGE_TYPES.includes(file.type)) { failed = true; message = 'Choisissez une image JPEG, PNG ou WebP.'; return; }
-    if (file.size > MAX_IMAGE_BYTES) { failed = true; message = 'L’image est limitée à 5 Mo.'; return; }
+    if (file.size > MAX_IMAGE_BYTES) { failed = true; message = 'L’image est limitée à 50 Mo.'; return; }
     // Keep room for the image syntax before storing a new file.
     if (value.length > 99_000) { failed = true; message = 'Libérez de la place dans le contenu avant d’ajouter une image.'; return; }
     const start = textarea.selectionStart;
@@ -87,15 +88,13 @@
     {#each tools as tool}
       <button type="button" onclick={() => format(tool)} disabled={disabled || uploading} title={`Insérer : ${tool.label}`}>{tool.label}</button>
     {/each}
-    <button type="button" class="blog-image-toggle" aria-expanded={imagePanel} aria-controls="image-upload-panel" onclick={() => imagePanel = !imagePanel} disabled={disabled || uploading}>＋ Image</button>
+    <button type="button" class="blog-image-toggle" aria-expanded={imagePanel} aria-controls="image-upload-panel" onclick={async () => { imagePanel = !imagePanel; if (imagePanel) { await tick(); document.getElementById('image-description')?.focus(); } }} disabled={disabled || uploading}><Icon name="image" /> Image</button>
   </div>
-  {#if imagePanel}
-    <div class="blog-image-panel" id="image-upload-panel">
+    <div class="blog-image-panel" id="image-upload-panel" hidden={!imagePanel}>
       <div class="blog-field"><label for="image-description">Description de l’image</label><input id="image-description" bind:value={imageDescription} maxlength="300" placeholder="Décrivez l’image pour les lecteurs d’écran" disabled={uploading || disabled} /></div>
       <div class="blog-field"><label for="article-image">Importer une image</label><input id="article-image" type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading || disabled} onchange={(event) => { void upload(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }} aria-describedby="image-help" /></div>
-      <p class="blog-field-help" id="image-help">JPEG, PNG ou WebP · 5 Mo maximum. Les images sont optimisées et accessibles par leur lien, même avant publication.</p>
+      <p class="blog-field-help" id="image-help">JPEG, PNG ou WebP · 50 Mo maximum. Pour une photo HEIC/HEIF, choisissez un export JPEG. Les images sont optimisées et accessibles par leur lien, même avant publication.</p>
     </div>
-  {/if}
   {#if message}<p class="blog-upload-message" class:blog-upload-error={failed} role={failed ? 'alert' : 'status'}>{message}</p>{/if}
   <div class="blog-field">
     <label for="content">Contenu de l’article</label>

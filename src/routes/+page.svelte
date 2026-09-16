@@ -1,4 +1,7 @@
 <script lang="ts">
+  import Seo from '$lib/components/Seo.svelte';
+  import { page } from '$app/state';
+  import Icon from '$lib/components/Icon.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import { base } from '$app/paths';
   import PrintResume from '$lib/components/PrintResume.svelte';
@@ -24,11 +27,12 @@
   const number = (index: number) => String(index + 1).padStart(2, '0');
 </script>
 
-<svelte:head>
-  <title>{basics.name ?? 'Portfolio'} — {basics.label ?? 'Développement'}{isDemo ? ' · Démonstration' : ''}</title>
-  <meta name="description" content={basics.summary ?? 'Portfolio de développement et curriculum vitæ.'} />
-  {#if isDemo}<meta name="robots" content="noindex, nofollow" />{/if}
-</svelte:head>
+<Seo title={`${basics.name ?? 'Portfolio'} — ${basics.label ?? 'Développement'}${isDemo ? ' · Démonstration' : ''}`}
+  description={basics.summary ?? 'Portfolio de développement et curriculum vitæ.'} path="/"
+  structuredData={{ '@context': 'https://schema.org', '@type': 'ProfilePage', url: `${page.data.site.url}${page.data.site.basePath}/`,
+    mainEntity: { '@type': 'Person', '@id': `${page.data.site.url}${page.data.site.basePath}/#person`, name: basics.name,
+      jobTitle: basics.label, description: basics.summary, url: `${page.data.site.url}${page.data.site.basePath}/`,
+      sameAs: profiles.map((profile) => safeUrl(profile.url)) } }} />
 
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 
@@ -43,11 +47,11 @@
     </nav>
     <div class="header-actions">
       <ThemeToggle />
-      <a class="header-cta" href="#contact">Échanger <span aria-hidden="true">↗</span></a>
+      <a class="header-cta" href="#contact">Échanger <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a>
     </div>
   </header>
 
-  <main id="contenu">
+  <main id="contenu" tabindex="-1">
     <section id="accueil" class="hero" aria-labelledby="hero-title">
       <div class="hero-topline"><span class="eyebrow"><span class="status-dot"></span>{basics.label ?? 'Développeur'}</span><span class="edition">PORTFOLIO / {isDemo ? 'DÉMO' : 'CV'}</span></div>
       <div class="hero-grid">
@@ -56,9 +60,9 @@
           <p class="hero-statement">L’IA en pratique.<br />L’expertise <em>PHP.</em></p>
           <p class="hero-summary">{basics.summary}</p>
           <div class="hero-actions">
-            <a class="button primary" href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">Télécharger le CV PDF <span aria-hidden="true">↓</span></a>
-            {#if showProjects && projects.length}<a class="text-button" href="#projets">Explorer mes projets <span aria-hidden="true">↘</span></a>{/if}
-            <button class="text-button print-control" onclick={() => window.print()}>Imprimer (ATS) <span aria-hidden="true">↗</span></button>
+            <a class="button primary" href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">Télécharger le CV PDF <span aria-hidden="true"><Icon name="download" /></span></a>
+            {#if showProjects && projects.length}<a class="text-button" href="#projets">Explorer mes projets <span aria-hidden="true"><Icon name="arrow-down-right" /></span></a>{/if}
+            <button class="text-button print-control" onclick={() => window.print()}>Imprimer (ATS) <Icon name="printer" /></button>
           </div>
         </div>
         <figure class="portrait-composition">
@@ -107,7 +111,7 @@
                   </div>
                 {/if}
               </div>
-              <span class="timeline-arrow" aria-hidden="true">↗</span>
+              <span class="timeline-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span>
             </article>
           {/each}
         </div>
@@ -115,7 +119,7 @@
     {/if}
 
     <section id="profil" class="section profile-section" aria-labelledby="profile-title">
-      <div class="profile-intro"><span class="eyebrow section-kicker">02 / PROFIL & COMPÉTENCES</span><h2 id="profile-title">Compétences<br /><span>techniques.</span></h2><p>Mon objectif est d’évoluer vers un poste d’architecte logiciel spécialisé en IA, tout en continuant à coder. Je m’appuie sur mon expertise PHP/Symfony, mon expérience de responsable R&D et mes réalisations en IA pour concevoir des solutions adaptées aux besoins des équipes.</p><a class="inline-link" href="{base}/resume.json" download="resume.json">Télécharger le JSON Resume <span aria-hidden="true">↓</span></a></div>
+      <div class="profile-intro"><span class="eyebrow section-kicker">02 / PROFIL & COMPÉTENCES</span><h2 id="profile-title">Compétences<br /><span>techniques.</span></h2><p>Mon objectif est d’évoluer vers un poste d’architecte logiciel spécialisé en IA, tout en continuant à coder. Je m’appuie sur mon expertise PHP/Symfony, mon expérience de responsable R&D et mes réalisations en IA pour concevoir des solutions adaptées aux besoins des équipes.</p><a class="inline-link" href="{base}/resume.json" download="resume.json">Télécharger le JSON Resume <span aria-hidden="true"><Icon name="download" /></span></a></div>
       <div class="skill-groups">
         {#each skills as skill, index}
           <div class="skill-group">
@@ -145,8 +149,8 @@
               </div>
               {#if projectImage && safeUrl(projectImage.source)}<p class="image-credit">Photo : <a href={safeUrl(projectImage.source)} target="_blank" rel="noreferrer">{projectImage.photographer ?? 'Source'}<span class="sr-only"> (nouvel onglet)</span></a></p>{/if}
               <div class="project-content"><div class="project-meta"><span>{project.type ?? 'Projet'}</span><span>{year(project.endDate ?? project.startDate)}</span></div><h3>{project.name}</h3><p>{project.description}</p><ul class="tags" aria-label="Technologies">{#each project.keywords ?? [] as keyword}<li>{keyword}</li>{/each}</ul>
-                {#if project.highlights?.length}<details><summary>Dans les détails <span class="details-plus" aria-hidden="true">+</span></summary><ul class="project-details">{#each project.highlights as highlight}<li>{highlight}</li>{/each}</ul></details>{/if}
-                {#if safeUrl(project.url)}<a class="project-link" href={safeUrl(project.url)} target="_blank" rel="noreferrer">Voir le projet <span aria-hidden="true">↗</span><span class="sr-only"> (nouvel onglet)</span></a>{/if}
+                {#if project.highlights?.length}<details><summary>Dans les détails <Icon name="plus" class="details-plus" /></summary><ul class="project-details">{#each project.highlights as highlight}<li>{highlight}</li>{/each}</ul></details>{/if}
+                {#if safeUrl(project.url)}<a class="project-link" href={safeUrl(project.url)} target="_blank" rel="noreferrer">Voir le projet <span aria-hidden="true"><Icon name="external-link" /></span><span class="sr-only"> (nouvel onglet)</span></a>{/if}
               </div>
             </article>
           {/each}
@@ -162,12 +166,12 @@
       </div>
     {/if}
 
-    <section id="contact" class="contact-section" aria-labelledby="contact-title"><span class="eyebrow">LA SUITE S’ÉCRIT À PLUSIEURS</span><div class="contact-heading"><h2 id="contact-title">Parlons de votre<br /><em>prochain projet.</em></h2><span class="contact-arrow" aria-hidden="true">↗</span></div><div class="contact-details">
+    <section id="contact" class="contact-section" aria-labelledby="contact-title"><span class="eyebrow">LA SUITE S’ÉCRIT À PLUSIEURS</span><div class="contact-heading"><h2 id="contact-title">Parlons de votre<br /><em>prochain projet.</em></h2><span class="contact-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span></div><div class="contact-details">
       {#if phones.length}<div><h3>Téléphone</h3>{#each phones as phone}<p><a href="tel:{phone.replace(/[^+0-9]/g, '')}">{phone}</a></p>{/each}</div>{/if}
       {#if locationLabel(basics.location)}<div><h3>Localisation</h3><p>{locationLabel(basics.location)}</p></div>{/if}
-    </div><div class="contact-bottom">{#if basics.email}<a class="button dark" href="mailto:{basics.email}">{basics.email} <span aria-hidden="true">↗</span></a>{:else}<p>{isDemo ? 'Coordonnées à personnaliser dans cette démonstration.' : 'Coordonnées non renseignées.'}</p>{/if}<div class="social-links"><a href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">CV PDF ↓</a>{#each profiles as profile}<a href={safeUrl(profile.url)} target="_blank" rel="noreferrer">{profile.network ?? 'Profil'} ↗<span class="sr-only"> (nouvel onglet)</span></a>{/each}<button class="text-button print-control" onclick={() => window.print()}>Imprimer (ATS) ↗</button></div></div></section>
+    </div><div class="contact-bottom">{#if basics.email}<a class="button dark" href="mailto:{basics.email}">{basics.email} <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a>{:else}<p>{isDemo ? 'Coordonnées à personnaliser dans cette démonstration.' : 'Coordonnées non renseignées.'}</p>{/if}<div class="social-links"><a href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">CV PDF <Icon name="download" /></a>{#each profiles as profile}<a href={safeUrl(profile.url)} target="_blank" rel="noreferrer">{profile.network ?? 'Profil'} <Icon name="external-link" /><span class="sr-only"> (nouvel onglet)</span></a>{/each}<button class="text-button print-control" onclick={() => window.print()}>Imprimer (ATS) <Icon name="printer" /></button></div></div></section>
   </main>
-  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><a href="{base}/connexion">Espace auteur</a><a href="#accueil">Retour en haut ↑</a></footer>
+  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><a href="{base}/connexion">Espace auteur</a><a href="#accueil">Retour en haut <Icon name="arrow-up" /></a></footer>
 </div>
 
 <PrintResume />

@@ -88,6 +88,9 @@ section[id] {
   transform:translateY(0)
 }
 
+/* Keep fixed-position skip links clipped during WebKit's full-page rendering. */
+.skip-link:not(:focus) { clip-path:inset(50%); }
+
 .site-header {
   min-height:116px;
   display:flex;
@@ -1054,7 +1057,7 @@ footer {
 .theme-toggle { display:grid; place-items:center; width:44px; height:44px; flex:none; padding:10px; border:1px solid var(--border-strong); border-radius:4px; background:transparent; }
 .theme-toggle:hover { color:var(--accent); border-color:var(--accent); background:var(--surface); }
 .theme-toggle svg { width:20px; height:20px; }
-.theme-icon-moon { display:none; }
+.theme-toggle .theme-icon-moon { display:none; }
 @media (prefers-color-scheme:light) {
   :root:not([data-theme="dark"]) .theme-icon-sun { display:none; }
   :root:not([data-theme="dark"]) .theme-icon-moon { display:block; }
@@ -1065,3 +1068,13 @@ footer {
   .site-header nav { order:3; width:100%; justify-content:center; margin:0; }
   .header-actions { margin-left:auto; }
 }
+
+/* Lucide SVGs use explicit geometry, independent of text fonts/platforms. */
+.ui-icon { display:inline-block; flex:none; vertical-align:-.18em; pointer-events:none; }
+.timeline-arrow .ui-icon,.contact-arrow .ui-icon { width:1em; height:1em; }
+button:disabled { cursor:wait; }
+@media (forced-colors:active) {
+  :focus-visible { outline-color:Highlight; }
+  button,a { forced-color-adjust:auto; }
+}
+.contact-section .eyebrow { color:#6f4632; }

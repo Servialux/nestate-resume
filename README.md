@@ -54,9 +54,9 @@ Withdrawing an article hides it from the blog. It does not remove an existing Li
 
 ### Images and themes
 
-Use **Image** in the editor to add an accessible description and upload a JPEG, PNG or WebP, or paste an image into the content field. Uploads require the author session and a same-origin request. Each file is limited to 5 MiB and 25 megapixels, decoded and re-encoded as WebP, stripped of metadata and resized to at most 2400 px. The image Markdown is inserted at the cursor; save the article afterwards. Editing and saving are locked during the upload to avoid losing content.
+Use **Image** in the editor to add an accessible description and upload a JPEG, PNG or WebP, or paste an image into the content field. Uploads require the author session and a same-origin request. Each file is limited to 50 MiB and 64 megapixels, decoded and re-encoded as WebP, stripped of metadata and resized to at most 2400 px. The image Markdown is inserted at the cursor; save the article afterwards. Editing and saving are locked during the upload to avoid losing content.
 
-Files are stored in `DATA_DIR/uploads` on the same persistent volume as SQLite and served at `/media/<uuid>.webp`. Image URLs are public as soon as uploaded, including images inserted into drafts. Unpublishing an article does not revoke its image links. Include the entire uploads directory in backups; deployments must preserve it. `npm start` defaults the Node HTTP body limit to `6M` so images larger than the adapter’s 512 KB default work; the upload endpoint enforces its own 5 MiB limit. `BODY_SIZE_LIMIT` can override the server limit.
+Files are stored in `DATA_DIR/uploads` on the same persistent volume as SQLite and served at `/media/<uuid>.webp`. Image URLs are public as soon as uploaded, including images inserted into drafts. Unpublishing an article does not revoke its image links. Include the entire uploads directory in backups; deployments must preserve it. `npm start` defaults the Node HTTP body limit to `52M` so images larger than the adapter’s 512 KB default work; the upload endpoint enforces its own 50 MiB limit. `BODY_SIZE_LIMIT` can override the server limit.
 
 `src/lib/themes/aptoryn.css` centralizes the AptOryn espresso/cream palette: ivory backgrounds and espresso accents in light mode, espresso black backgrounds and sand accents in dark mode. The theme follows the system preference until the visitor chooses a mode; that choice persists across pages and reloads.
 
@@ -82,8 +82,10 @@ Railway sets `RAILWAY_ENVIRONMENT_ID`, so its build skips PDF regeneration and u
 To install the browser locally:
 
 ```sh
-PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
+PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium firefox webkit
 ```
+
+On macOS 27, Firefox may fail before opening a page because the personal application-data directory is protected. Keep the test data isolated: `mkdir -p tmp/firefox-app-data`, then run `MOZ_APP_DATA="$PWD/tmp/firefox-app-data" npm run test:e2e`. This does not change the personal Firefox profile or system permissions.
 
 ## Updating the resume
 
@@ -155,3 +157,13 @@ This repository contains personal resume content and project materials. Do not r
 - [SvelteKit Node adapter](https://svelte.dev/docs/kit/adapter-node)
 - [JSON Resume schema](https://jsonresume.org/schema)
 - [Railway deployment documentation](https://docs.railway.com/)
+
+## Search indexing and accessibility
+
+Public pages render their canonical URL, concise description, Open Graph/Twitter cards and JSON-LD on the server. The CV uses `ProfilePage`/`Person`, the blog uses `Blog`, and articles use `BlogPosting` plus breadcrumbs and publication/update dates. The first Markdown image becomes an article’s sharing image, with a local 1200 × 630 cover as fallback (regenerate with `node scripts/generate-social-preview.mjs`). Canonicals use the configured `SITE_URL`, never a request Host header or tracking query.
+
+`/sitemap.xml` contains the home page, blog and published articles only, with real article modification dates. Drafts and withdrawn articles are excluded. `/robots.txt` advertises this sitemap only when indexing is enabled. Indexing defaults on for Railway `production` with a valid HTTPS `SITE_URL`, and off elsewhere. Set `INDEXING_ENABLED=true` for an explicitly public non-Railway deployment, or `false` to disable it. Non-production Railway environments (including recette) always send `noindex`, even if the flag is accidentally set to true. Private/error pages also send `X-Robots-Tag: noindex, nofollow`. Crawling is allowed so search engines can read these directives; noindex is not access control.
+
+Interface icons use locally bundled SVG components from `@lucide/svelte`, documented in [Skeleton’s iconography guide](https://www.skeleton.dev/docs/svelte/design/iconography). The [Lucide ISC license and inherited Feather MIT license](https://lucide.dev/license) are retained in `THIRD_PARTY_NOTICES.md`. Decorative icons are hidden from assistive technology; their adjacent text names the action. No remote icon API or icon font is used.
+
+The browser suite checks WCAG A/AA rules using axe on public and author pages in both themes across Chromium, Firefox and WebKit (iPhone viewport), keyboard focus/skip navigation/editor tabs, SVG rendering, and 320 px reflow. Automated checks supplement human review; they do not constitute a formal accessibility certification. JPEG, PNG and WebP uploads support 50 MiB and up to 64 megapixels (including 48 MP iPhone JPEGs); native HEIC/HEIF and ProRAW files must currently be exported to JPEG first.

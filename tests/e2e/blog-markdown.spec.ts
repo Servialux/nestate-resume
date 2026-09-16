@@ -23,7 +23,7 @@ test('tableaux, image importée et rendu public dans les deux thèmes', async ({
   await page.getByRole('button', { name: 'Tableau', exact: true }).click();
   await expect(content).toHaveValue(/\| Colonne 1 \| Colonne 2 \|/);
   await content.fill((await content.inputValue()) + '\n\n| Fonction | Usage | Format | État |\n| --- | --- | --- | --- |\n| Images | Illustration | WebP | Disponible |\n\n1. Écrire\n2. Publier\n\n<script>window.injected=true</script>\n\n');
-  await page.getByRole('button', { name: '＋ Image', exact: true }).click();
+  await page.getByRole('button', { name: 'Image', exact: true }).click();
   await page.getByLabel('Description de l’image').fill('Palette espresso et crème');
   await page.getByLabel('Importer une image').setInputFiles({ name: 'palette.png', mimeType: 'image/png', buffer: await illustration() });
   await expect(page.getByRole('status').filter({ hasText: 'Image ajoutée' })).toBeVisible();
@@ -50,9 +50,13 @@ test('tableaux, image importée et rendu public dans les deux thèmes', async ({
   expect(downloaded.headers()['content-type']).toBe('image/webp');
   expect(downloaded.headers()['x-content-type-options']).toBe('nosniff');
   await expect(publicPage.locator('html')).toHaveCSS('background-color', 'rgb(11, 7, 6)');
+  await expect(publicPage.locator('.theme-icon-sun')).toBeVisible();
+  await expect(publicPage.locator('.theme-icon-moon')).toBeHidden();
   await publicPage.screenshot({ path: `test-results/markdown-${testInfo.project.name}-dark.png`, fullPage: true });
   await publicPage.getByRole('button', { name: 'Passer au mode clair' }).click();
   await expect(publicPage.locator('html')).toHaveCSS('background-color', 'rgb(255, 252, 248)');
+  await expect(publicPage.locator('.theme-icon-moon')).toBeVisible();
+  await expect(publicPage.locator('.theme-icon-sun')).toBeHidden();
   await publicPage.screenshot({ path: `test-results/markdown-${testInfo.project.name}-light.png`, fullPage: true });
   await publicPage.reload();
   await expect(publicPage.locator('html')).toHaveCSS('background-color', 'rgb(255, 252, 248)');
@@ -75,11 +79,11 @@ test('envoi protégé : session, origine, type et taille ; erreurs visibles sans
   const author = page.context().request;
   expect((await author.post('/admin/images', { data: file, headers: { ...uploadHeaders, origin: 'https://forged.test' } })).status()).toBe(403);
   expect((await author.post('/admin/images', { data: '<svg></svg>', headers: uploadHeaders })).status()).toBe(415);
-  expect((await author.post('/admin/images', { data: Buffer.alloc(5 * 1024 * 1024 + 1), headers: uploadHeaders })).status()).toBe(413);
+  expect((await author.post('/admin/images', { data: Buffer.alloc(50 * 1024 * 1024 + 1), headers: uploadHeaders })).status()).toBe(413);
   expect((await request.get('/media/missing.webp')).status()).toBe(404);
   await page.goto('/admin/articles/nouveau');
   await page.getByLabel('Contenu de l’article').fill('Mon contenu à conserver.');
-  await page.getByRole('button', { name: '＋ Image', exact: true }).click();
+  await page.getByRole('button', { name: 'Image', exact: true }).click();
   await page.getByLabel('Importer une image').setInputFiles({ name: 'invalide.png', mimeType: 'image/png', buffer: Buffer.from('not an image') });
   await expect(page.getByRole('alert')).toContainText('valide');
   await expect(page.getByLabel('Contenu de l’article')).toHaveValue('Mon contenu à conserver.');

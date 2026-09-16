@@ -1,3 +1,5 @@
+import { getSiteConfig } from '$lib/server/site';
+import { isDemo } from '$lib/resume';
 import { base } from '$app/paths';
 import { json, type Handle } from '@sveltejs/kit';
 import { getSessionUser, SESSION_COOKIE } from '$lib/server/auth';
@@ -11,7 +13,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   const authRoute = matches('/connexion') || matches('/deconnexion');
   const privateRoute = adminRoute || authRoute;
 
-  const privateHeaders = { 'cache-control': 'private, no-store' };
+  const privateHeaders = { 'cache-control': 'private, no-store', 'x-robots-tag': 'noindex, nofollow' };
+  if (!privateRoute && (!getSiteConfig().indexable || isDemo)) event.setHeaders({ 'x-robots-tag': 'noindex, nofollow' });
   if (privateRoute) event.setHeaders(privateHeaders);
   event.locals.user = getSessionUser(event.cookies.get(SESSION_COOKIE));
 
@@ -35,5 +38,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     return new Response(null, { status: 303, headers: { ...privateHeaders, location } });
   }
 
-  return resolve(event);
+  const response = await resolve(event);
+  if (response.status >= 400) response.headers.set('x-robots-tag', 'noindex, nofollow');
+  return response;
 };

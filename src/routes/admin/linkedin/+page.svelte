@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from '$lib/components/Icon.svelte';
   import { enhance } from '$app/forms';
   import { base } from '$app/paths';
   import BlogShell from '$lib/components/BlogShell.svelte';
@@ -8,10 +9,10 @@
   let accessToken = $state('');
 </script>
 
-<svelte:head><title>Connexion LinkedIn — Espace auteur</title><meta name="robots" content="noindex, nofollow" /></svelte:head>
+<svelte:head><title>Connexion LinkedIn — Espace auteur</title></svelte:head>
 
 <BlogShell admin userEmail={data.user?.email}>
-  <a class="blog-back" href={`${base}/admin`}><span aria-hidden="true">←</span> Mes articles</a>
+  <a class="blog-back" href={`${base}/admin`}><span aria-hidden="true"><Icon name="arrow-left" /></span> Mes articles</a>
   <div class="blog-page-heading"><div><span class="blog-kicker">Votre réseau, au fil des articles</span><h1 class="blog-title">Le blog.<br /><span>Puis LinkedIn.</span></h1><p class="blog-intro">Connectez votre profil pour partager automatiquement vos nouveaux articles lors de leur publication.</p></div></div>
   {#if form?.message}<div class="blog-notice" class:blog-notice-error={!form.success} class:blog-notice-success={form.success} role={form.success ? 'status' : 'alert'}>{form.message}</div>{/if}
   <div class="blog-settings-grid">
@@ -22,7 +23,7 @@
         <div class="blog-field"><label for="authorUrn">Identifiant du profil auteur</label><input type="text" id="authorUrn" name="authorUrn" value={data.settings.authorUrn} placeholder="urn:li:person:VOTRE_IDENTIFIANT" autocomplete="off" spellcheck="false" aria-describedby="author-help" /><p id="author-help" class="blog-field-help">Format : <code>urn:li:person:</code> suivi de votre identifiant de membre LinkedIn.</p></div>
         <div class="blog-field"><label for="apiVersion">Version de l’API LinkedIn</label><input type="text" id="apiVersion" name="apiVersion" value={data.settings.apiVersion} required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" aria-describedby="version-help" /><p id="version-help" class="blog-field-help">Format AAAAMM. Utilisez une version encore prise en charge par LinkedIn.</p></div>
         <label class="blog-check"><input type="checkbox" name="enabled" checked={data.settings.enabled} /><span>Activer le connecteur LinkedIn<small>Chaque article possède sa propre option de partage. Les articles existants ne sont pas partagés automatiquement.</small></span></label>
-        <button class="blog-button blog-button-primary" type="submit" disabled={pending}>{pending ? 'Enregistrement…' : 'Enregistrer la connexion'} <span aria-hidden="true">↗</span></button>
+        <button class="blog-button blog-button-primary" type="submit" disabled={pending}>{pending ? 'Enregistrement…' : 'Enregistrer la connexion'} <span aria-hidden="true"><Icon name="arrow-up-right" /></span></button>
       </form>
       {#if data.settings.tokenConfigured}
         <div class="blog-settings-footer"><p>Déconnecter LinkedIn supprime le jeton enregistré. Vos articles et vos posts déjà partagés restent en place.</p><form method="POST" action="?/disconnect" use:enhance={() => { pending = true; return async ({ update }) => { try { await update(); accessToken = ''; } finally { pending = false; } }; }}><button class="blog-button blog-button-small blog-button-subtle" type="submit" disabled={pending}>Déconnecter LinkedIn</button></form></div>
@@ -32,7 +33,7 @@
       <span class="blog-kicker">Première connexion</span><h2 id="linkedin-help-title">Préparer l’accès LinkedIn</h2>
       <p>LinkedIn demande une application développeur et un jeton autorisé pour publier sur votre profil personnel.</p>
       <ol class="blog-help-list">
-        <li>Créez votre application sur le <a href="https://www.linkedin.com/developers/apps" target="_blank" rel="noreferrer">portail développeur LinkedIn ↗</a> et activez le produit <strong>Share on LinkedIn</strong>.</li>
+        <li>Créez votre application sur le <a href="https://www.linkedin.com/developers/apps" target="_blank" rel="noreferrer">portail développeur LinkedIn <Icon name="external-link" /><span class="sr-only"> (nouvel onglet)</span></a> et activez le produit <strong>Share on LinkedIn</strong>.</li>
         <li>Autorisez votre propre compte avec OAuth et la permission <code>w_member_social</code>, puis récupérez le <strong>jeton d’accès</strong>. Une clé d’application seule ne permet pas de publier.</li>
         <li>Pour retrouver votre identifiant, activez <strong>Sign In with LinkedIn using OpenID Connect</strong> et les permissions <code>openid profile</code>. La réponse de <code>GET https://api.linkedin.com/v2/userinfo</code> contient le champ <code>sub</code>. Préfixez sa valeur par <code>urn:li:person:</code>.</li>
         <li>Enregistrez la connexion ici. Dans votre article, cochez <strong>Partager à la publication</strong>, puis publiez.</li>

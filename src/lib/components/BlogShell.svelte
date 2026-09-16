@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Icon from '$lib/components/Icon.svelte';
+  import { page } from '$app/state';
   import type { Snippet } from 'svelte';
   import { base } from '$app/paths';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
@@ -20,8 +22,8 @@
     <div class="blog-header-actions">
       <nav class="blog-nav" aria-label="Navigation principale">
         <a href={`${base}/`}>CV</a>
-        <a href={`${base}/blog`} aria-current={admin ? undefined : 'page'}>Blog</a>
-        <a href={`${base}/admin`} aria-current={admin ? 'page' : undefined}>Espace auteur <span aria-hidden="true">↗</span></a>
+        <a href={`${base}/blog`} aria-current={page.url.pathname === `${base}/blog` ? 'page' : undefined}>Blog</a>
+        <a href={`${base}/admin`} aria-current={page.url.pathname === `${base}/admin` ? 'page' : undefined}>Espace auteur <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a>
       </nav>
       <ThemeToggle />
     </div>
@@ -29,6 +31,6 @@
   {#if admin && userEmail}
     <div class="blog-account-bar"><span>Connecté · {userEmail}</span><form method="POST" action={`${base}/deconnexion`}><button type="submit" class="blog-text-link">Se déconnecter</button></form></div>
   {/if}
-  <main id="contenu" class="blog-main">{@render children()}</main>
-  <footer class="blog-footer"><span>{name}<span class="footer-dot">.</span></span><a href={`${base}/`}>Revenir au CV <span aria-hidden="true">↗</span></a></footer>
+  <main id="contenu" class="blog-main" tabindex="-1">{@render children()}</main>
+  <footer class="blog-footer"><span>{name}<span class="footer-dot">.</span></span><a href={`${base}/`}>Revenir au CV <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a></footer>
 </div>
