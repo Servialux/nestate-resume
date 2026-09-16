@@ -4,10 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vite dev --host 127.0.0.1",
+    "dev": "node --env-file-if-exists=.env node_modules/vite/bin/vite.js dev --host 127.0.0.1",
+    "start": "node --env-file-if-exists=.env build",
+    "admin:create": "node --env-file-if-exists=.env --experimental-strip-types scripts/admin-create.mjs",
     "build": "node scripts/build.mjs && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -20,9 +22,10 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
-    "@sveltejs/adapter-static": "3.0.10",
+    "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "2.70.3",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
+    "@types/node": "^22.20.3",
     "svelte": "5.57.0",
     "svelte-check": "4.7.6",
     "typescript": "5.9.2",

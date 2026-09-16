@@ -38,6 +38,7 @@
     <nav aria-label="Navigation principale">
       {#if work.length}<a href="#parcours">Parcours</a>{/if}
       <a href="#profil">Profil</a>
+      <a href="{base}/blog">Blog</a>
       {#if showProjects && projects.length}<a href="#projets">Projets</a>{/if}
     </nav>
     <div class="header-actions">
@@ -166,7 +167,7 @@
       {#if locationLabel(basics.location)}<div><h3>Localisation</h3><p>{locationLabel(basics.location)}</p></div>{/if}
     </div><div class="contact-bottom">{#if basics.email}<a class="button dark" href="mailto:{basics.email}">{basics.email} <span aria-hidden="true">↗</span></a>{:else}<p>{isDemo ? 'Coordonnées à personnaliser dans cette démonstration.' : 'Coordonnées non renseignées.'}</p>{/if}<div class="social-links"><a href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">CV PDF ↓</a>{#each profiles as profile}<a href={safeUrl(profile.url)} target="_blank" rel="noreferrer">{profile.network ?? 'Profil'} ↗<span class="sr-only"> (nouvel onglet)</span></a>{/each}<button class="text-button print-control" onclick={() => window.print()}>Imprimer (ATS) ↗</button></div></div></section>
   </main>
-  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><a href="#accueil">Retour en haut ↑</a></footer>
+  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><a href="{base}/connexion">Espace auteur</a><a href="#accueil">Retour en haut ↑</a></footer>
 </div>
 
 <PrintResume />
