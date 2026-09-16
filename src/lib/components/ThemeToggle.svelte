@@ -19,7 +19,7 @@
     const theme = isLight ? 'light' : 'dark';
     document.documentElement.dataset.theme = theme;
     document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => {
-      meta.content = isLight ? '#f7f5f0' : '#0d1726';
+      meta.content = isLight ? '#fffcf8' : '#0b0706';
     });
     try { localStorage.setItem('portfolio-theme', theme); } catch { /* Switching still works without storage. */ }
   }

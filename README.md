@@ -45,12 +45,20 @@ The development server listens on `127.0.0.1`. Open `/connexion` using the crede
 ## Writing and publishing
 
 1. Connect at `/connexion` and choose **Nouvel article** in the author area.
-2. Enter a title, a short summary and content. The editor supports paragraphs, headings, lists, quotations and code blocks; HTML is displayed as text.
+2. Enter a title, a short summary and content. The Markdown editor supports headings, bold/italic/strikethrough, links, nested and ordered lists, quotations, fenced code and real tables. Use the toolbar to insert syntax; preview and published articles share the same renderer. Authored HTML is displayed as text and unsafe URL schemes are rejected.
 3. Save a draft or preview the article. Drafts are never available on public routes.
 4. Publish the article. Its URL stays stable when its title changes.
 5. If LinkedIn is configured, enable sharing for that article before its first publication. Later edits do not create duplicate LinkedIn posts. An explicit share button is available for published articles that have not yet been shared.
 
 Withdrawing an article hides it from the blog. It does not remove an existing LinkedIn post; that post can be managed on LinkedIn.
+
+### Images and themes
+
+Use **Image** in the editor to add an accessible description and upload a JPEG, PNG or WebP, or paste an image into the content field. Uploads require the author session and a same-origin request. Each file is limited to 5 MiB and 25 megapixels, decoded and re-encoded as WebP, stripped of metadata and resized to at most 2400 px. The image Markdown is inserted at the cursor; save the article afterwards. Editing and saving are locked during the upload to avoid losing content.
+
+Files are stored in `DATA_DIR/uploads` on the same persistent volume as SQLite and served at `/media/<uuid>.webp`. Image URLs are public as soon as uploaded, including images inserted into drafts. Unpublishing an article does not revoke its image links. Include the entire uploads directory in backups; deployments must preserve it. `npm start` defaults the Node HTTP body limit to `6M` so images larger than the adapter’s 512 KB default work; the upload endpoint enforces its own 5 MiB limit. `BODY_SIZE_LIMIT` can override the server limit.
+
+`src/lib/themes/aptoryn.css` centralizes the AptOryn espresso/cream palette: ivory backgrounds and espresso accents in light mode, espresso black backgrounds and sand accents in dark mode. The theme follows the system preference until the visitor chooses a mode; that choice persists across pages and reloads.
 
 ## LinkedIn connector
 
@@ -106,10 +114,12 @@ The project does not invent contact details, location, language levels, or perso
 ```sh
 npm run test:unit
 npm run test:e2e
+# After building: verify real Node uploads and image persistence across restarts
+npm run test:integration
 npm test
 ```
 
-Unit tests cover the CV helpers, authentication, draft/publication behavior and LinkedIn responses through mocked HTTP calls. Playwright covers the CV plus the complete author workflow on desktop and mobile. Browser tests create a separate temporary database and owner and never use your credentials or publish on LinkedIn. Test artifacts are written to `test-results/` and `playwright-report/`.
+Unit tests cover the CV helpers, authentication, Markdown rendering/XSS cases, image validation and persistence, draft/publication behavior and LinkedIn responses through mocked HTTP calls. Playwright covers the CV plus the complete author workflow, image uploads, table rendering and both themes on desktop and mobile. Browser tests create a separate temporary database and owner and never use your credentials or publish on LinkedIn. Test artifacts are written to `test-results/` and `playwright-report/`.
 
 ## Deployment
 
@@ -127,8 +137,8 @@ For CLI operations, always pass the explicit project, service and environment; d
 
 The previous deployment served static files. The blog requires migrating it to a Node service before release:
 
-1. Remove `RAILPACK_SPA_OUTPUT_DIR` and any static-site start command. Build with `npm run build`, start with `npm start` using Node 22.13 or later.
-2. Attach a persistent volume at `/data`, and set `DATA_DIR=/data`. The SQLite database, sessions, articles, connector settings and encryption key must survive redeploys. Run one application instance with this local SQLite store.
+1. Remove `RAILPACK_SPA_OUTPUT_DIR` and any static-site start command. Build with `npm run build`, start with `npm start` (which configures the image body limit) using Node 22.13 or later.
+2. Attach a persistent volume at `/data`, and set `DATA_DIR=/data`. The SQLite database, uploaded images, sessions, articles, connector settings and encryption key must survive redeploys. Run one application instance with this local SQLite store.
 3. Set `ORIGIN=https://nestate.site` and `SITE_URL=https://nestate.site` to the actual public domain. Production authentication requires HTTPS.
 4. Provision the owner on the running service with `npm run admin:create` and the same volume/environment. Keep `scripts/` and `src/lib/server/` in the deployed image for this command. There is deliberately no public first-user signup.
 5. Back up the data volume and encryption key; a database-only restore cannot decrypt a token encrypted with a lost key. To copy a live SQLite database, use SQLite's backup mechanism or stop the service before copying the directory (including WAL files).
