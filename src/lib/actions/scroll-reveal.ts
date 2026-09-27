@@ -12,7 +12,7 @@ export function scrollReveal(node: HTMLElement, enabled = true) {
     for (const target of targets) {
       const top = target.getBoundingClientRect().top;
       const progress = target.contains(document.activeElement)
-        ? 1 : Math.max(0, Math.min(1, (height * .95 - top) / (height * .3)));
+        ? 1 : Math.max(0, Math.min(1, (height * .85 - top) / (height * .35)));
       target.style.setProperty('--reveal-opacity', String(progress));
       target.classList.add('reveal-active');
     }
