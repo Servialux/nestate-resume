@@ -31,7 +31,7 @@ test('les expériences précèdent le profil, sans section projets ni lien assoc
   await expect(page.locator('.section-kicker')).toHaveText(['01 / PARCOURS', '02 / PROFIL & COMPÉTENCES']);
   await expect(page.locator('#projets, a[href="#projets"]')).toHaveCount(0);
   const nav = page.getByRole('navigation', { name: 'Navigation principale' });
-  await expect(nav.getByRole('link')).toHaveText(['Parcours', 'Profil']);
+  await expect(nav.getByRole('link')).toHaveText(['Parcours', 'Profil', 'Blog']);
   for (const [label, anchor] of [['Parcours', 'parcours'], ['Profil', 'profil']]) {
     await nav.getByRole('link', { name: label, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`#${anchor}$`));

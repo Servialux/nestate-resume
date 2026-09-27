@@ -9,7 +9,14 @@
     "location": {
       "city": "Montpellier",
       "countryCode": "FR"
-    }
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "alexandre-ambiehl-289120437",
+        "url": "https://www.linkedin.com/in/alexandre-ambiehl-289120437/"
+      }
+    ]
   },
   "work": [
     {
@@ -396,9 +403,15 @@
           "license": "https://unsplash.com/license",
           "illustration": true
         }
+      },
+      "portrait": {
+        "src": "/images/alexandre-ambiehl.jpg",
+        "alt": "Portrait en noir et blanc d’Alexandre Ambiehl.",
+        "illustration": false
       }
     },
-    "educationSummary": "Parcours informatique autodidacte depuis 2008"
+    "educationSummary": "Parcours informatique autodidacte depuis 2008",
+    "experienceYears": 14
   },
   "interests": [
     {

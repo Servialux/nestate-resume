@@ -11,10 +11,12 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] } }
+    { name: 'mobile-chromium', use: { ...devices['Pixel 7'] } },
+    { name: 'desktop-firefox', use: { ...devices['Desktop Firefox'] }, testMatch: /(?:accessibility|seo|blog-markdown)\.spec\.ts/ },
+    { name: 'iphone-webkit', use: { ...devices['iPhone 13'] }, testMatch: /(?:accessibility|seo|blog-markdown)\.spec\.ts/ }
   ],
   webServer: {
-    command: 'npm run dev -- --port 4175 --strictPort',
+    command: 'node --experimental-strip-types scripts/e2e-server.mjs',
     url: 'http://127.0.0.1:4175',
     reuseExistingServer: false
   }

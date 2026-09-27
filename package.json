@@ -4,10 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vite dev --host 127.0.0.1",
+    "dev": "node --env-file-if-exists=.env node_modules/vite/bin/vite.js dev --host 127.0.0.1",
+    "start": "node --env-file-if-exists=.env scripts/start.mjs",
+    "admin:create": "node --env-file-if-exists=.env --experimental-strip-types scripts/admin-create.mjs",
     "build": "node scripts/build.mjs && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -16,16 +18,25 @@
     "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
     "test": "npm run test:unit && npm run test:e2e",
     "test:report": "playwright show-report --host 127.0.0.1",
-    "generate:cv": "node --experimental-strip-types scripts/generate-cv.mjs"
+    "generate:cv": "node --experimental-strip-types scripts/generate-cv.mjs",
+    "test:integration": "node --experimental-strip-types --test tests/integration/*.test.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0",
-    "@sveltejs/adapter-static": "3.0.10",
+    "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "2.70.3",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
+    "@types/markdown-it": "14.2.0",
+    "@types/node": "^22.20.3",
     "svelte": "5.57.0",
     "svelte-check": "4.7.6",
     "typescript": "5.9.2",
     "vite": "8.2.2"
+  },
+  "dependencies": {
+    "@lucide/svelte": "1.46.0",
+    "markdown-it": "15.0.2",
+    "sharp": "0.35.4"
   }
 }

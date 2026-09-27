@@ -1,0 +1,33 @@
+/* AptOryn — Espresso / Cream. Shared by the portfolio, blog and author space. */
+:root {
+  color-scheme: dark;
+  --bg: light-dark(#fffcf8, #0b0706);
+  --surface: light-dark(#f5efe8, #2b201b);
+  --ink: light-dark(#3a2119, #f5efe8);
+  --muted: light-dark(#6f4632, #cfc0b3);
+  --line: light-dark(#d5c0aa, #403129);
+  --accent: light-dark(#3a2119, #d5c0aa);
+  --card: light-dark(#f5efe8, #19110e);
+  --border-strong: light-dark(#a28266, #7c6859);
+  --border-hover: light-dark(#6f4632, #a28266);
+  --accent-hover: light-dark(#6f4632, #bea084);
+  --notice-line: light-dark(#d5c0aa, #5b493d);
+  --notice-ink: light-dark(#49382d, #e7dcd2);
+  --tag-line: light-dark(#bea084, #5b493d);
+  --tag-ink: light-dark(#68503e, #d5c0aa);
+  --detail-ink: light-dark(#49382d, #e7dcd2);
+  --skill-ink: light-dark(#68503e, #d5c0aa);
+  --badge-line: light-dark(#a28266, #6f4632);
+  --marker: light-dark(#85684f, #aa9584);
+  --photo-bg: light-dark(#e8dbcd, #2b201b);
+  --photo-ink: light-dark(#49382d, #e7dcd2);
+  --art-bg: light-dark(#e8dbcd, #2b201b);
+  --contact-bg: #f5efe8;
+}
+
+/* Respect the system preference until the visitor makes a persistent choice. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) { color-scheme: light; }
+}
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
