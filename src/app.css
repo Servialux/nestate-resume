@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import './lib/fonts/fonts.css';
 @import './lib/themes/aptoryn.css';
 :root {
   font-family:'DM Sans',sans-serif;
@@ -234,6 +234,8 @@ em {
   font-style:normal;
   color:var(--accent)
 }
+
+.hero-location { margin-top:20px; max-width:470px; line-height:1.6; font-size:1.125rem; }
 
 .hero-summary {
   color:var(--muted);
@@ -1078,3 +1080,5 @@ button:disabled { cursor:wait; }
   button,a { forced-color-adjust:auto; }
 }
 .contact-section .eyebrow { color:#6f4632; }
+
+button:disabled { cursor:wait; opacity:.65; }

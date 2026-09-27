@@ -167,3 +167,9 @@ Public pages render their canonical URL, concise description, Open Graph/Twitter
 Interface icons use locally bundled SVG components from `@lucide/svelte`, documented in [Skeleton’s iconography guide](https://www.skeleton.dev/docs/svelte/design/iconography). The [Lucide ISC license and inherited Feather MIT license](https://lucide.dev/license) are retained in `THIRD_PARTY_NOTICES.md`. Decorative icons are hidden from assistive technology; their adjacent text names the action. No remote icon API or icon font is used.
 
 The browser suite checks WCAG A/AA rules using axe on public and author pages in both themes across Chromium, Firefox and WebKit (iPhone viewport), keyboard focus/skip navigation/editor tabs, SVG rendering, and 320 px reflow. Automated checks supplement human review; they do not constitute a formal accessibility certification. JPEG, PNG and WebP uploads support 50 MiB and up to 64 megapixels (including 48 MP iPhone JPEGs); native HEIC/HEIF and ProRAW files must currently be exported to JPEG first.
+
+### Personal search visibility
+
+The home page has dedicated search copy in `resume.meta.seo`, a `WebSite` identity and a `ProfilePage` linked to the same author as the blog. Its portrait has responsive WebP variants generated with `node scripts/optimize-portrait.mjs`. Fonts are bundled locally under the OFL licenses in `src/lib/fonts/`.
+
+See [the SEO and accessibility review](docs/seo-accessibilite.md) for the release boundary, checks, limitations and the owner's Search Console steps. Recette remains non-indexable; SEO changes on `develop` must be released on `main` to affect the public site.

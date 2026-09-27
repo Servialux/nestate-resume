@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import Icon from '$lib/components/Icon.svelte';
 
+  let interactive = $state(false);
   let isLight = $state(false);
 
   onMount(() => {
@@ -11,6 +12,7 @@
       isLight = choice ? choice === 'light' : preference.matches;
     };
     sync();
+    interactive = true;
     preference.addEventListener('change', sync);
     return () => preference.removeEventListener('change', sync);
   });
@@ -26,7 +28,7 @@
   }
 </script>
 
-<button class="theme-toggle" type="button" onclick={toggleTheme}
+<button class="theme-toggle" type="button" disabled={!interactive} onclick={toggleTheme}
   aria-label={isLight ? 'Passer au mode sombre' : 'Passer au mode clair'}
   title={isLight ? 'Passer au mode sombre' : 'Passer au mode clair'}>
   <Icon name="sun" class="theme-icon-sun" />

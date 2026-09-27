@@ -407,11 +407,29 @@
       "portrait": {
         "src": "/images/alexandre-ambiehl.jpg",
         "alt": "Portrait en noir et blanc d’Alexandre Ambiehl.",
-        "illustration": false
+        "illustration": false,
+        "width": 1086,
+        "height": 1448,
+        "variants": [
+          {
+            "src": "/images/alexandre-ambiehl-480.webp",
+            "width": 480
+          },
+          {
+            "src": "/images/alexandre-ambiehl-960.webp",
+            "width": 960
+          }
+        ]
       }
     },
     "educationSummary": "Parcours informatique autodidacte depuis 2008",
-    "experienceYears": 14
+    "experienceYears": 14,
+    "seo": {
+      "title": "Alexandre Ambiehl — Développeur PHP/Symfony à Montpellier",
+      "description": "Alexandre Ambiehl, développeur PHP/Symfony et architecte logiciel à Montpellier. 14+ ans en développement, applications web et agents IA. France et full remote.",
+      "introduction": "Développeur PHP/Symfony et architecte logiciel à Montpellier.",
+      "workPreference": "Basé à Montpellier, en France, je souhaite contribuer à des projets web et IA sur place ou à distance (full remote)."
+    }
   },
   "interests": [
     {
