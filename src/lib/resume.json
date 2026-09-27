@@ -9,7 +9,14 @@
     "location": {
       "city": "Montpellier",
       "countryCode": "FR"
-    }
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "alexandre-ambiehl-289120437",
+        "url": "https://www.linkedin.com/in/alexandre-ambiehl-289120437/"
+      }
+    ]
   },
   "work": [
     {
