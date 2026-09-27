@@ -1120,10 +1120,10 @@ button:disabled { cursor:wait; }
 button:disabled { cursor:wait; opacity:.65; }
 
 /* Added only after IntersectionObserver is ready; SSR stays fully visible. */
-.reveal-pending { opacity:0; transform:translateY(28px); }
+.reveal-active { opacity:var(--reveal-opacity, 1); }
 @media (prefers-reduced-motion:reduce) {
-  .reveal-pending { opacity:1!important; transform:none!important; }
+  .reveal-active { opacity:1!important; }
 }
 @media print {
-  .reveal-pending { opacity:1!important; transform:none!important; }
+  .reveal-active { opacity:1!important; }
 }

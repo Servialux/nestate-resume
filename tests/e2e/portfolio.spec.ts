@@ -73,15 +73,22 @@ test('disponibilité et fondus respectent la pause et la réduction des mouvemen
   const card = page.locator('.timeline-item').first();
   // Before scrolling, below-the-fold content must actually await its reveal.
   await expect(card).toHaveCSS('opacity', '0');
-  await card.evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
-  await expect.poll(() => card.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  async function positionCard(fraction: number) {
+    await card.evaluate((element, fraction) => {
+      window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - innerHeight * fraction, behavior: 'instant' });
+    }, fraction);
+  }
+  await positionCard(.8);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeGreaterThan(.3);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
+  await positionCard(.5);
   await expect(card).toHaveCSS('opacity', '1');
-  await expect.poll(() => card.evaluate((element) => element.getAnimations().length)).toBe(0);
-  const nextCard = page.locator('.timeline-item').nth(1);
-  await expect(nextCard).toHaveCSS('opacity', '0');
-  await nextCard.evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
-  await expect.poll(() => nextCard.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
-  // A preference change while a reveal is running must restore visibility.
+  // Returning above the card rearms the fade, including after anchor navigation.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect(card).toHaveCSS('opacity', '0');
+  await positionCard(.8);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
+  const nextCard = card;
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect.poll(() => nextCard.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
   expect(await nextCard.evaluate((element) => element.getAnimations().length)).toBe(0);

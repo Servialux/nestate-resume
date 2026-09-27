@@ -1,82 +1,69 @@
-/** Progressive enhancement: content is visible in SSR and without JavaScript. */
+/** Content stays visible in SSR, without JavaScript, and when motion is reduced. */
 export function scrollReveal(node: HTMLElement, enabled = true) {
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const seen = new WeakSet<Element>();
-  const animations = new Map<Element, Animation>();
-  const pending = new Set<Element>();
-  let observer: IntersectionObserver | undefined;
+  let targets: HTMLElement[] = [];
+  let frame = 0;
+  let active = false;
+
+  function render() {
+    frame = 0;
+    const height = window.innerHeight;
+    // Tie the fade to scrolling, rather than a timer that can finish off screen.
+    for (const target of targets) {
+      const top = target.getBoundingClientRect().top;
+      const progress = target.contains(document.activeElement)
+        ? 1 : Math.max(0, Math.min(1, (height * .95 - top) / (height * .3)));
+      target.style.setProperty('--reveal-opacity', String(progress));
+      target.classList.add('reveal-active');
+    }
+  }
+
+  function schedule() {
+    if (active && !frame) frame = requestAnimationFrame(render);
+  }
 
   function stop() {
-    observer?.disconnect();
-    for (const animation of animations.values()) animation.cancel();
-    animations.clear();
-    for (const target of pending) target.classList.remove('reveal-pending');
-    pending.clear();
+    active = false;
+    cancelAnimationFrame(frame);
+    frame = 0;
+    for (const target of targets) {
+      target.classList.remove('reveal-active');
+      target.style.removeProperty('--reveal-opacity');
+    }
   }
 
   function configure() {
     stop();
-    if (!enabled || preference.matches || !('IntersectionObserver' in window)) return;
-    observer = new IntersectionObserver((entries) => {
-      let stagger = 0;
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer?.unobserve(entry.target);
-        seen.add(entry.target);
-        pending.delete(entry.target);
-        entry.target.classList.remove('reveal-pending');
-        if (entry.target.contains(document.activeElement)) continue;
-        const animation = entry.target.animate([
-          { opacity: 0, transform: 'translateY(28px)' },
-          { opacity: 1, transform: 'translateY(0)' }
-        ], { duration: 850, delay: Math.min(stagger++ * 65, 195), easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'backwards' });
-        animations.set(entry.target, animation);
-        animation.onfinish = () => { animations.delete(entry.target); };
-      }
-    }, { threshold: 0, rootMargin: `0px 0px -${Math.round(window.innerHeight * .1)}px 0px` });
-    for (const target of node.querySelectorAll('[data-reveal]')) {
-      // Leave the initial viewport, restored scroll position and anchor intact.
-      if (seen.has(target) || target.getBoundingClientRect().top < window.innerHeight) {
-        seen.add(target);
-      } else {
-        pending.add(target);
-        target.classList.add('reveal-pending');
-        observer.observe(target);
-      }
-    }
-  }
-
-  function showFocused(event: FocusEvent) {
-    // Keyboard navigation must never land inside a transparent block.
-    for (const target of pending) {
-      if (event.target instanceof Node && target.contains(event.target)) {
-        target.classList.remove('reveal-pending');
-        pending.delete(target);
-        seen.add(target);
-        observer?.unobserve(target);
-      }
-    }
-    for (const [target, animation] of animations) {
-      if (event.target instanceof Node && target.contains(event.target)) {
-        animation.cancel();
-        animations.delete(target);
-      }
-    }
+    targets = Array.from(node.querySelectorAll<HTMLElement>('[data-reveal]'));
+    active = enabled && !preference.matches;
+    // Measure after Svelte has finished mounting the complete page.
+    schedule();
   }
 
   configure();
+  const resize = new ResizeObserver(schedule);
+  resize.observe(node);
   preference.addEventListener('change', configure);
-  node.addEventListener('focusin', showFocused);
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  node.addEventListener('focusin', schedule);
+  node.addEventListener('focusout', schedule);
   window.addEventListener('beforeprint', stop);
   window.addEventListener('afterprint', configure);
+  window.addEventListener('pageshow', configure);
   return {
     update(value: boolean) { enabled = value; configure(); },
     destroy() {
       stop();
+      resize.disconnect();
       preference.removeEventListener('change', configure);
-      node.removeEventListener('focusin', showFocused);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      node.removeEventListener('focusin', schedule);
+      node.removeEventListener('focusout', schedule);
       window.removeEventListener('beforeprint', stop);
       window.removeEventListener('afterprint', configure);
+      window.removeEventListener('pageshow', configure);
     }
   };
 }
