@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { scrollReveal } from '$lib/actions/scroll-reveal';
   import { absoluteUrl } from '$lib/seo';
   import Seo from '$lib/components/Seo.svelte';
   import { page } from '$app/state';
@@ -12,6 +13,7 @@
   import { resume, isDemo, period, year, safeUrl, locationLabel } from '$lib/resume';
 
   let interactive = $state(false);
+  let motionPaused = $state(false);
   onMount(() => { interactive = true; });
   const basics = resume.basics ?? {};
   const phones = [basics.phone, ...(basics.additionalPhones ?? [])].filter((phone): phone is string => Boolean(phone));
@@ -52,7 +54,7 @@
 
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 
-<div class="shell">
+<div class="shell" class:motion-paused={motionPaused} use:scrollReveal={!motionPaused}>
   <header class="site-header">
     <a class="brand" href="#accueil" aria-label="Retour à l’accueil"><span class="brand-mark">{initials}<span>.</span></span><span class="brand-caption">{basics.label}</span></a>
     <nav aria-label="Navigation principale">
@@ -69,7 +71,7 @@
 
   <main id="contenu" tabindex="-1">
     <section id="accueil" class="hero" aria-labelledby="hero-title">
-      <div class="hero-topline"><span class="eyebrow"><span class="status-dot"></span>{basics.label ?? 'Développeur'}</span><span class="edition">PORTFOLIO / {isDemo ? 'DÉMO' : 'CV'}</span></div>
+      <div class="hero-topline"><span class="eyebrow"><span class="status-dot" aria-hidden="true"></span>{basics.label ?? 'Développeur'}<span class="availability-label" lang="en">Open to work</span></span><span class="edition">PORTFOLIO / {isDemo ? 'DÉMO' : 'CV'}</span></div>
       <div class="hero-grid">
         <div class="hero-copy">
           <h1 id="hero-title">{nameParts[0]}{' '}<br /><span>{nameParts.slice(1).join(' ') || 'Portfolio'}<span class="name-dot">.</span></span></h1>
@@ -99,10 +101,10 @@
     {#if isDemo}<aside class="demo-notice"><span class="demo-label">MODE DÉMO</span><p>{resume.meta?.demoNotice ?? 'Profil de démonstration : les informations affichées sont fictives.'}</p></aside>{/if}
 
     {#if work.length}
-      <section id="parcours" class="section" aria-labelledby="work-title"><div class="section-heading"><div><span class="eyebrow section-kicker">01 / PARCOURS</span><h2 id="work-title">Apprendre.<br /><span>Puis aller plus loin.</span></h2></div>{#if isDemo}<p>Un exemple de parcours pour vous projeter. Les expériences ci-dessous sont fictives.</p>{/if}</div>
+      <section id="parcours" class="section" aria-labelledby="work-title"><div class="section-heading" data-reveal><div><span class="eyebrow section-kicker">01 / PARCOURS</span><h2 id="work-title">Apprendre.<br /><span>Puis aller plus loin.</span></h2></div>{#if isDemo}<p>Un exemple de parcours pour vous projeter. Les expériences ci-dessous sont fictives.</p>{/if}</div>
         <div class="timeline">
           {#each work as job}
-            <article class="timeline-item">
+            <article class="timeline-item" data-reveal>
               <div class="timeline-period">{period(job.startDate, job.endDate)}{#if job.startDate && !job.endDate}<span class="current-label">{isDemo ? 'ACTUEL · EXEMPLE' : 'ACTUEL'}</span>{/if}</div>
               <div class="timeline-body">
                 <h3>{job.position}</h3><p class="company">{job.name}</p><p>{job.summary}</p>
@@ -117,7 +119,7 @@
                   <div class="mission-list">
                     <p class="mission-notice">Les clients sont désignés par leur secteur d’activité pour respecter la confidentialité des missions.</p>
                     {#each job.missions as mission}
-                      <section class="mission">
+                      <section class="mission" data-reveal>
                         <p class="mission-label">{mission.label}</p>
                         <h4>{mission.name}</h4>
                         <p>{mission.summary}</p>
@@ -136,10 +138,10 @@
     {/if}
 
     <section id="profil" class="section profile-section" aria-labelledby="profile-title">
-      <div class="profile-intro"><span class="eyebrow section-kicker">02 / PROFIL & COMPÉTENCES</span><h2 id="profile-title">Compétences<br /><span>techniques.</span></h2><p>Mon objectif est d’évoluer vers un poste d’architecte logiciel spécialisé en IA, tout en continuant à coder. Je m’appuie sur mon expertise PHP/Symfony, mon expérience de responsable R&D et mes réalisations en IA pour concevoir des solutions adaptées aux besoins des équipes.</p><a class="inline-link" href="{base}/resume.json" download="resume.json">Télécharger le JSON Resume <span aria-hidden="true"><Icon name="download" /></span></a></div>
+      <div class="profile-intro" data-reveal><span class="eyebrow section-kicker">02 / PROFIL & COMPÉTENCES</span><h2 id="profile-title">Compétences<br /><span>techniques.</span></h2><p>Mon objectif est d’évoluer vers un poste d’architecte logiciel spécialisé en IA, tout en continuant à coder. Je m’appuie sur mon expertise PHP/Symfony, mon expérience de responsable R&D et mes réalisations en IA pour concevoir des solutions adaptées aux besoins des équipes.</p><a class="inline-link" href="{base}/resume.json" download="resume.json">Télécharger le JSON Resume <span aria-hidden="true"><Icon name="download" /></span></a></div>
       <div class="skill-groups">
         {#each skills as skill, index}
-          <div class="skill-group">
+          <div class="skill-group" data-reveal>
             <div class="skill-heading"><span class="mono">{number(index)}</span><h3>{skill.name}</h3></div>
             {#if skill.summary}<p class="skill-summary">{skill.summary}</p>{/if}
             <ul class="skill-list">{#each skill.keywords ?? [] as keyword}<li>{keyword}</li>{/each}</ul>
@@ -153,11 +155,11 @@
 
     {#if showProjects && projects.length}
       <section id="projets" class="section" aria-labelledby="projects-title">
-        <div class="section-heading"><div><span class="eyebrow section-kicker">03 / SÉLECTION</span><h2 id="projects-title">Réalisations.<br /><span>Et explorations.</span></h2></div><p>Agent de développement IA, applications web et objets connectés. Les missions confidentielles sont présentées sans nom de client ni détail interne.</p></div>
+        <div class="section-heading" data-reveal><div><span class="eyebrow section-kicker">03 / SÉLECTION</span><h2 id="projects-title">Réalisations.<br /><span>Et explorations.</span></h2></div><p>Agent de développement IA, applications web et objets connectés. Les missions confidentielles sont présentées sans nom de client ni détail interne.</p></div>
         <div class="projects-grid">
           {#each projects as project, index}
             {@const projectImage = projectImages[project.name ?? '']}
-            <article class="project-card" class:featured={index === 0}>
+            <article class="project-card" data-reveal class:featured={index === 0}>
               <div class="project-art">
                 {#if projectImage}<PortfolioPhoto image={projectImage} />{/if}
                 <span class="art-caption">{project.name}</span>
@@ -183,13 +185,13 @@
       </div>
     {/if}
 
-    <section id="contact" class="contact-section" aria-labelledby="contact-title"><span class="eyebrow">LA SUITE S’ÉCRIT À PLUSIEURS</span><div class="contact-heading"><h2 id="contact-title">Parlons de votre<br /><em>prochain projet.</em></h2><span class="contact-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span></div><div class="contact-details">
+    <section id="contact" class="contact-section" data-reveal aria-labelledby="contact-title"><span class="eyebrow">LA SUITE S’ÉCRIT À PLUSIEURS</span><div class="contact-heading"><h2 id="contact-title">Parlons de votre<br /><em>prochain projet.</em></h2><span class="contact-arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span></div><div class="contact-details">
       {#if phones.length}<div><h3>Téléphone</h3>{#each phones as phone}<p><a href="tel:{phone.replace(/[^+0-9]/g, '')}">{phone}</a></p>{/each}</div>{/if}
       {#if locationLabel(basics.location)}<div><h3>Localisation</h3><p>{locationLabel(basics.location)}</p></div>{/if}
       {#if seo}<div><h3>Sur place ou à distance</h3><p>{seo.workPreference}</p></div>{/if}
     </div><div class="contact-bottom">{#if basics.email}<a class="button dark" href="mailto:{basics.email}">{basics.email} <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a>{:else}<p>{isDemo ? 'Coordonnées à personnaliser dans cette démonstration.' : 'Coordonnées non renseignées.'}</p>{/if}<div class="social-links"><a href="{base}{CV_PDF_PATH}" download="CV-Alexandre-Ambiehl.pdf">CV PDF <Icon name="download" /></a>{#each profiles as profile}<a href={safeUrl(profile.url)} target="_blank" rel="noreferrer">{profile.network ?? 'Profil'} <Icon name="external-link" /><span class="sr-only"> (nouvel onglet)</span></a>{/each}<button class="text-button print-control" disabled={!interactive} onclick={() => window.print()}>Imprimer (ATS) <Icon name="printer" /></button></div></div></section>
   </main>
-  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><a href="{base}/connexion">Espace auteur</a><a href="#accueil">Retour en haut <Icon name="arrow-up" /></a></footer>
+  <footer><span>{basics.name} <span class="footer-dot">/</span> {isDemo ? 'Portfolio de démonstration' : basics.label}</span><button class="motion-toggle" type="button" disabled={!interactive} aria-pressed={motionPaused} onclick={() => motionPaused = !motionPaused}>{motionPaused ? 'Reprendre les animations' : 'Mettre les animations en pause'}</button><a href="{base}/connexion">Espace auteur</a><a href="#accueil">Retour en haut <Icon name="arrow-up" /></a></footer>
 </div>
 
 <PrintResume />

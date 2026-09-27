@@ -64,3 +64,24 @@ test('les compétences complémentaires se déplient et le CV JSON est télécha
   expect(download.suggestedFilename()).toBe('resume.json');
   expect(await download.failure()).toBeNull();
 });
+
+test('disponibilité et fondus respectent la pause et la réduction des mouvements', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: /Passer au mode/ })).toBeEnabled();
+  await expect(page.getByText('Open to work', { exact: true })).toBeVisible();
+  const card = page.locator('.timeline-item').first();
+  await card.evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect.poll(() => card.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  // A preference change while a reveal is running must restore visibility.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => card.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
+  expect(await card.evaluate((element) => element.getAnimations().length)).toBe(0);
+  expect(await page.locator('.status-dot').evaluate((element) => getComputedStyle(element, '::after').animationName)).toBe('none');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const pause = page.getByRole('button', { name: 'Mettre les animations en pause' });
+  await pause.click();
+  await expect(page.getByRole('button', { name: 'Reprendre les animations' })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.locator('.status-dot').evaluate((element) => getComputedStyle(element, '::after').animationName)).toBe('none');
+  expect(await page.locator('[data-reveal]').evaluateAll((elements) => elements.every((element) => getComputedStyle(element).opacity === '1'))).toBe(true);
+});

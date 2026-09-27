@@ -173,3 +173,7 @@ The browser suite checks WCAG A/AA rules using axe on public and author pages in
 The home page has dedicated search copy in `resume.meta.seo`, a `WebSite` identity and a `ProfilePage` linked to the same author as the blog. Its portrait has responsive WebP variants generated with `node scripts/optimize-portrait.mjs`. Fonts are bundled locally under the OFL licenses in `src/lib/fonts/`.
 
 See [the SEO and accessibility review](docs/seo-accessibilite.md) for the release boundary, checks, limitations and the owner's Search Console steps. Recette remains non-indexable; SEO changes on `develop` must be released on `main` to affect the public site.
+
+### Portfolio motion
+
+The green availability indicator has a soft pulse and an explicit “Open to work” label. The footer lets visitors pause/resume motion. Scroll reveals run once as content enters the viewport, using IntersectionObserver and the Web Animations API; SSR content is never hidden by default. Reduced-motion changes immediately cancel reveals, keyboard focus restores visible content, and printing cancels active animations.
