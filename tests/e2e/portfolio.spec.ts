@@ -64,3 +64,39 @@ test('les compétences complémentaires se déplient et le CV JSON est télécha
   expect(download.suggestedFilename()).toBe('resume.json');
   expect(await download.failure()).toBeNull();
 });
+
+test('disponibilité et fondus respectent la pause et la réduction des mouvements', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: /Passer au mode/ })).toBeEnabled();
+  await expect(page.getByText('Open to work', { exact: true })).toBeVisible();
+  const card = page.locator('.timeline-item').first();
+  // Before scrolling, below-the-fold content must actually await its reveal.
+  await expect(card).toHaveCSS('opacity', '0');
+  async function positionCard(fraction: number) {
+    await card.evaluate((element, fraction) => {
+      window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - innerHeight * fraction, behavior: 'instant' });
+    }, fraction);
+  }
+  await positionCard(.8);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeGreaterThan(.3);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
+  await positionCard(.5);
+  await expect(card).toHaveCSS('opacity', '1');
+  // Returning above the card rearms the fade, including after anchor navigation.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect(card).toHaveCSS('opacity', '0');
+  await positionCard(.8);
+  await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
+  const nextCard = card;
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => nextCard.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
+  expect(await nextCard.evaluate((element) => element.getAnimations().length)).toBe(0);
+  expect(await page.locator('.status-dot').evaluate((element) => getComputedStyle(element, '::after').animationName)).toBe('none');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const pause = page.getByRole('button', { name: 'Mettre les animations en pause' });
+  await pause.click();
+  await expect(page.getByRole('button', { name: 'Reprendre les animations' })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.locator('.status-dot').evaluate((element) => getComputedStyle(element, '::after').animationName)).toBe('none');
+  expect(await page.locator('[data-reveal]').evaluateAll((elements) => elements.every((element) => getComputedStyle(element).opacity === '1'))).toBe(true);
+});

@@ -48,3 +48,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ```
+# Locally hosted fonts
+
+DM Sans and Space Grotesk are distributed under the SIL Open Font License 1.1.
+The original licenses and copyright notices are included in
+`src/lib/fonts/dm-sans-OFL.txt` and `src/lib/fonts/space-grotesk-OFL.txt`.
+The WOFF2 subsets come from the Google Fonts CSS API, retrieved 2026-09-27.
+The site serves these files locally; visitors do not request Google Fonts.

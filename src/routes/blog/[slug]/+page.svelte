@@ -35,7 +35,7 @@
     <a class="blog-back" href={`${base}/blog`}><span aria-hidden="true"><Icon name="arrow-left" /></span> Tous les articles</a>
     <span class="blog-kicker">Le carnet de bord</span>
     <h1 class="blog-title">{data.post.title}</h1>
-    <div class="blog-article-meta"><span>{author}</span><span aria-hidden="true">·</span><time datetime={data.post.publishedAt ?? data.post.createdAt}>{date(data.post.publishedAt ?? data.post.createdAt)}</time><span aria-hidden="true">·</span><span>{readTime} min de lecture</span></div>
+    <div class="blog-article-meta"><a href={`${base}/`} rel="author">{author}</a><span aria-hidden="true">·</span><time datetime={data.post.publishedAt ?? data.post.createdAt}>{date(data.post.publishedAt ?? data.post.createdAt)}</time><span aria-hidden="true">·</span><span>{readTime} min de lecture</span></div>
     <p class="blog-article-lead">{data.post.excerpt}</p>
     <ArticleContent content={data.post.content} />
     <div class="blog-article-end"><span>Merci de votre lecture.</span><a href={`${base}/blog`}>Retour au blog <span aria-hidden="true"><Icon name="arrow-up-right" /></span></a></div>

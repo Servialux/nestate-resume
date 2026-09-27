@@ -16,7 +16,7 @@
   description={`Le carnet de bord de ${author}. Réflexions, retours d’expérience et explorations autour du développement et de l’IA.`}
   structuredData={{ '@context': 'https://schema.org', '@type': 'Blog', name: `Le carnet de bord de ${author}`,
     url: `${page.data.site.url}${page.data.site.basePath}/blog`, inLanguage: 'fr-FR',
-    author: { '@type': 'Person', name: author, url: `${page.data.site.url}${page.data.site.basePath}/` },
+    author: { '@type': 'Person', '@id': `${page.data.site.url}${page.data.site.basePath}/#person`, name: author, url: `${page.data.site.url}${page.data.site.basePath}/` },
     blogPost: data.posts.map((post) => ({ '@type': 'BlogPosting', headline: post.title,
       url: `${page.data.site.url}${page.data.site.basePath}/blog/${post.slug}`, datePublished: post.publishedAt })) }} />
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import './lib/fonts/fonts.css';
 @import './lib/themes/aptoryn.css';
 :root {
   font-family:'DM Sans',sans-serif;
@@ -183,7 +183,43 @@ nav a:hover,.inline-link:hover,.text-button:hover {
   width:7px;
   flex:none;
   border-radius:50%;
-  background:var(--accent)
+  position:relative;
+  background:light-dark(#15803d, #4ade80);
+  box-shadow:0 0 10px #22c55e30
+}
+.status-dot::after {
+  content:'';
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:1px solid light-dark(#15803d, #4ade80);
+  animation:availability-pulse 2.6s ease-out infinite;
+  pointer-events:none
+}
+@keyframes availability-pulse {
+  0%,100% { opacity:0; transform:scale(.65); }
+  20% { opacity:.65; }
+  75% { opacity:0; transform:scale(1.65); }
+}
+.availability-label {
+  color:light-dark(#166534, #86efac);
+  font-size:.6875rem;
+  white-space:nowrap;
+  border:1px solid light-dark(#bbd6c3, #28523b);
+  border-radius:999px;
+  padding:5px 9px;
+  letter-spacing:.025em
+}
+.motion-paused .status-dot::after { animation:none; opacity:0; }
+.motion-toggle { font:inherit; background:none; border:0; padding:6px 0; min-height:28px; color:inherit; text-decoration:underline; text-underline-offset:3px; }
+.shell > footer { flex-wrap:wrap; align-items:center; }
+@media (max-width:600px) {
+  .hero-topline { flex-wrap:wrap; row-gap:12px; }
+  .hero-topline .eyebrow { flex-wrap:wrap; row-gap:10px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .status-dot::after { display:none; }
+  .motion-toggle { display:none; }
 }
 
 .edition {
@@ -234,6 +270,8 @@ em {
   font-style:normal;
   color:var(--accent)
 }
+
+.hero-location { margin-top:20px; max-width:470px; line-height:1.6; font-size:1.125rem; }
 
 .hero-summary {
   color:var(--muted);
@@ -1078,3 +1116,14 @@ button:disabled { cursor:wait; }
   button,a { forced-color-adjust:auto; }
 }
 .contact-section .eyebrow { color:#6f4632; }
+
+button:disabled { cursor:wait; opacity:.65; }
+
+/* Added only after IntersectionObserver is ready; SSR stays fully visible. */
+.reveal-active { opacity:var(--reveal-opacity, 1); }
+@media (prefers-reduced-motion:reduce) {
+  .reveal-active { opacity:1!important; }
+}
+@media print {
+  .reveal-active { opacity:1!important; }
+}

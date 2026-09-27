@@ -1,5 +1,44 @@
 import { test, expect } from '@playwright/test';
 
+test('identité, métier et localisation accessibles sans JavaScript', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  try {
+    const page = await context.newPage();
+    await page.goto('/?source=search');
+    expect(await page.locator('[data-reveal]').evaluateAll((elements) => elements.every((element) => getComputedStyle(element).opacity === '1'))).toBe(true);
+    await expect(page).toHaveTitle('Alexandre Ambiehl — Développeur PHP/Symfony à Montpellier');
+    await expect(page.locator('.hero-location')).toContainText('à Montpellier');
+    await expect(page.locator('#contact')).toContainText('France');
+    await expect(page.locator('#contact')).toContainText('full remote');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Alexandre Ambiehl.*PHP\/Symfony.*Montpellier.*full remote/);
+    const graph = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!)['@graph'];
+    const website = graph.find((node: Record<string, unknown>) => node['@type'] === 'WebSite');
+    const profile = graph.find((node: Record<string, unknown>) => node['@type'] === 'ProfilePage');
+    expect(website.name).toBe('Alexandre Ambiehl');
+    expect(profile.mainEntity.name).toBe('Alexandre Ambiehl');
+    expect(profile.mainEntity['@id']).toBe(website.publisher['@id']);
+    expect(profile.mainEntity.homeLocation.address).toMatchObject({ addressLocality: 'Montpellier', addressCountry: 'FR' });
+    expect(profile.mainEntity.sameAs).toContain('https://www.linkedin.com/in/alexandre-ambiehl-289120437/');
+    expect(profile.mainEntity.image).toBe('https://nestate.site/images/alexandre-ambiehl.jpg');
+    await expect(page.getByRole('link', { name: /LinkedIn/ })).toBeVisible();
+  } finally { await context.close(); }
+});
+
+test('portrait adaptatif et polices locales chargent sans Google Fonts', async ({ page }) => {
+  const externalFonts: string[] = [];
+  page.on('request', (request) => {
+    if (/fonts\.(googleapis|gstatic)\.com/.test(request.url())) externalFonts.push(request.url());
+  });
+  await page.goto('/');
+  const portrait = page.getByRole('img', { name: 'Portrait en noir et blanc d’Alexandre Ambiehl.' });
+  await expect(portrait).toHaveAttribute('srcset', /480\.webp 480w.*960\.webp 960w/);
+  await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+  expect(await portrait.evaluate((image: HTMLImageElement) => image.currentSrc)).toMatch(/-(480|960)\.webp$/);
+  await page.evaluate(() => document.fonts.ready);
+  expect(externalFonts).toEqual([]);
+  await expect(page.getByRole('button', { name: 'Imprimer (ATS)' }).first()).toBeEnabled();
+});
+
 test('métadonnées SSR cohérentes et recette non indexable', async ({ page, request }) => {
   const warnings: string[] = [];
   page.on('console', (message) => { if (message.type() === 'warning') warnings.push(message.text()); });

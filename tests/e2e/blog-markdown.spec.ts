@@ -39,6 +39,9 @@ test('tableaux, image importée et rendu public dans les deux thèmes', async ({
   const visitor = await browser.newContext({ viewport: page.viewportSize()!, colorScheme: 'dark' });
   const publicPage = await visitor.newPage();
   await publicPage.goto('/blog');
+  // Wait for hydration before exercising SvelteKit client-side navigation.
+  // Navigating while WebKit is importing dev modules aborts those imports.
+  await expect(publicPage.getByRole('button', { name: /Passer au mode/ })).toBeEnabled();
   await publicPage.getByRole('link', { name: title, exact: true }).click();
   await expect(publicPage.locator('.blog-prose table')).toHaveCount(2);
   const image = publicPage.getByRole('img', { name: 'Palette espresso et crème' });

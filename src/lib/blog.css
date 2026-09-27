@@ -60,3 +60,4 @@
 .blog-header .theme-toggle{min-width:44px;min-height:44px}
 .blog-text-link,.blog-back,.blog-footer a{min-height:24px}
 .blog-image-panel[hidden]{display:none}
+.blog-article-meta a { text-decoration:underline; text-underline-offset:.2em; }

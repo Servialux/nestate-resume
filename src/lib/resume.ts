@@ -3,6 +3,9 @@ import source from './resume.json' with { type: 'json' };
 export interface PortfolioImage {
   src: string;
   alt: string;
+  width?: number;
+  height?: number;
+  variants?: { src: string; width: number }[];
   photographer?: string;
   source?: string;
   original?: string;
@@ -27,6 +30,7 @@ export interface Resume {
   interests?: { name: string; keywords?: string[] }[];
   meta?: {
     demo?: boolean; demoNotice?: string; version?: string;
+    seo?: { title: string; description: string; introduction: string; workPreference: string };
     experienceYears?: number;
     experienceSince?: number;
     educationSummary?: string;
