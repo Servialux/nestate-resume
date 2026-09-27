@@ -69,9 +69,9 @@
           <div class="portrait-frame">
             {#if portrait}<PortfolioPhoto image={portrait} portrait />{:else}<div class="portrait-fallback" aria-hidden="true">{initials}</div>{/if}
             {#if portrait?.illustration}<span class="portrait-label">PORTRAIT D’ILLUSTRATION</span>{/if}
-            {#if resume.meta?.experienceSince}<div class="experience-badge"><strong>{resume.meta.experienceSince}</strong><span>Début de parcours<br />Systèmes, développement & architecture</span></div>{/if}
+            {#if resume.meta?.experienceYears}<div class="experience-badge"><strong>{resume.meta.experienceYears}+</strong><span>ans en développement<br />Architecture logicielle & agents IA</span></div>{/if}
           </div>
-          {#if portrait}<figcaption class="portrait-credit">
+          {#if portrait && (portrait.illustration || safeUrl(portrait.source))}<figcaption class="portrait-credit">
             {#if portrait.illustration}Photo provisoire — ce modèle n’est pas le propriétaire du portfolio.<br />{/if}
             {#if safeUrl(portrait.source)}Photo : <a href={safeUrl(portrait.source)} target="_blank" rel="noreferrer">{portrait.photographer ?? 'Source'}<span class="sr-only"> (nouvel onglet)</span></a>{/if}
           </figcaption>{/if}

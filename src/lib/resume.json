@@ -396,9 +396,15 @@
           "license": "https://unsplash.com/license",
           "illustration": true
         }
+      },
+      "portrait": {
+        "src": "/images/alexandre-ambiehl.jpg",
+        "alt": "Portrait en noir et blanc d’Alexandre Ambiehl.",
+        "illustration": false
       }
     },
-    "educationSummary": "Parcours informatique autodidacte depuis 2008"
+    "educationSummary": "Parcours informatique autodidacte depuis 2008",
+    "experienceYears": 14
   },
   "interests": [
     {
