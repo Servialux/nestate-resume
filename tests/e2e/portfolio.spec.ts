@@ -78,15 +78,16 @@ test('disponibilité et fondus respectent la pause et la réduction des mouvemen
       window.scrollTo({ top: window.scrollY + element.getBoundingClientRect().top - innerHeight * fraction, behavior: 'instant' });
     }, fraction);
   }
-  await positionCard(.8);
+  // Halfway through the reveal range, from 85% to 50% of the viewport.
+  await positionCard(.675);
   await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeGreaterThan(.3);
   await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
-  await positionCard(.5);
+  await positionCard(.49);
   await expect(card).toHaveCSS('opacity', '1');
   // Returning above the card rearms the fade, including after anchor navigation.
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   await expect(card).toHaveCSS('opacity', '0');
-  await positionCard(.8);
+  await positionCard(.675);
   await expect.poll(() => card.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(.7);
   const nextCard = card;
   await page.emulateMedia({ reducedMotion: 'reduce' });
