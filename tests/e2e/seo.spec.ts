@@ -5,6 +5,7 @@ test('identité, métier et localisation accessibles sans JavaScript', async ({ 
   try {
     const page = await context.newPage();
     await page.goto('/?source=search');
+    expect(await page.locator('[data-reveal]').evaluateAll((elements) => elements.every((element) => getComputedStyle(element).opacity === '1'))).toBe(true);
     await expect(page).toHaveTitle('Alexandre Ambiehl — Développeur PHP/Symfony à Montpellier');
     await expect(page.locator('.hero-location')).toContainText('à Montpellier');
     await expect(page.locator('#contact')).toContainText('France');

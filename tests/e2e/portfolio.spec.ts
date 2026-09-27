@@ -71,12 +71,20 @@ test('disponibilité et fondus respectent la pause et la réduction des mouvemen
   await expect(page.getByRole('button', { name: /Passer au mode/ })).toBeEnabled();
   await expect(page.getByText('Open to work', { exact: true })).toBeVisible();
   const card = page.locator('.timeline-item').first();
+  // Before scrolling, below-the-fold content must actually await its reveal.
+  await expect(card).toHaveCSS('opacity', '0');
   await card.evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
   await expect.poll(() => card.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  await expect(card).toHaveCSS('opacity', '1');
+  await expect.poll(() => card.evaluate((element) => element.getAnimations().length)).toBe(0);
+  const nextCard = page.locator('.timeline-item').nth(1);
+  await expect(nextCard).toHaveCSS('opacity', '0');
+  await nextCard.evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect.poll(() => nextCard.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
   // A preference change while a reveal is running must restore visibility.
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect.poll(() => card.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
-  expect(await card.evaluate((element) => element.getAnimations().length)).toBe(0);
+  await expect.poll(() => nextCard.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
+  expect(await nextCard.evaluate((element) => element.getAnimations().length)).toBe(0);
   expect(await page.locator('.status-dot').evaluate((element) => getComputedStyle(element, '::after').animationName)).toBe('none');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const pause = page.getByRole('button', { name: 'Mettre les animations en pause' });
